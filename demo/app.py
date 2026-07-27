@@ -57,8 +57,7 @@ def generate_speculative_stream(prompt: str, strategy: str, model_choice: str):
     Executes live speculative generation and streams token throughput, entropy, and tree structure.
     """
     if not prompt.strip():
-        yield "Please enter a prompt!", "0.0 tok/s", "1.00x", "0.0%", "0.0%", None, None
-        return
+        return "Please enter a prompt!", "0.0 tok/s", "1.00x", "0.0%", "0.0%", None, None
 
     model, tokenizer, device = load_model(model_choice)
     inputs = tokenizer(prompt, return_tensors="pt").to(device)
@@ -145,7 +144,7 @@ def generate_speculative_stream(prompt: str, strategy: str, model_choice: str):
     ax_tr.axis("off")
     plt.tight_layout()
 
-    yield (
+    return (
         generated_text,
         f"{tok_s:.1f} tok/s",
         f"{speedup:.2f}x",

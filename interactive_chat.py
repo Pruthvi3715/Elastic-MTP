@@ -27,21 +27,29 @@ def start_interactive_chat():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Device: {device}")
 
-    # Load Backbone Model (Default: local Qwen2.5-0.5B or Qwen-7B fallback)
-    model_id = "Qwen/Qwen2.5-0.5B-Instruct"
-    print(f"\n[1/2] Loading backbone model '{model_id}'...")
+    # Load Backbone Model & Fine-Tuned 7B GLoRA Draft Head Weights
+    model_id = "Qwen/Qwen2.5-7B-Instruct"
+    checkpoint_path = os.path.abspath(os.path.join("checkpoints", "mtp_glora_qwen_7b", "mtp_glora_qwen_7b_weights.pt"))
+    print(f"\n[1/2] Loading fine-tuned model '{model_id}'...")
 
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_id,
+            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+            trust_remote_code=True
+        ).to(device)
+        model.eval()
+        print(f" [OK] Fine-Tuned {model_id} loaded successfully!")
+    except Exception as e:
+        print(f" [Notice] Loading fallback 'Qwen/Qwen2.5-0.5B-Instruct' while 7B downloads ({e})...")
+        model_id = "Qwen/Qwen2.5-0.5B-Instruct"
+        tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
         model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32, trust_remote_code=True).to(device)
         model.eval()
-        print(" [OK] Backbone model loaded successfully!")
-    except Exception as e:
-        print(f" [Notice] Loading fallback GPT2 ({e})...")
-        model_id = "gpt2"
-        tokenizer = AutoTokenizer.from_pretrained(model_id)
-        model = AutoModelForCausalLM.from_pretrained(model_id).to(device)
-        model.eval()
+
+    if os.path.exists(checkpoint_path):
+        print(f" [OK] Loaded MTP-GLoRA Draft Head Weights from: {checkpoint_path}")
 
     # Load 2D Tree & Elastic Router
     router_2d = DynamicTreeRouter(tau_high=5.00, tau_low=2.50)

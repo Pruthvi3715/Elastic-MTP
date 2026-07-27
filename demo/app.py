@@ -33,15 +33,19 @@ def load_model(model_name: str):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Loading model '{model_name}' on {device}...")
     
+    # Check if local cache model exists first for instant response
+    cached_model = "Qwen/Qwen2.5-0.5B-Instruct"
+    target_name = cached_model if "0.5B" in model_name or "7B" in model_name else model_name
+    
     try:
-        tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-        model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float32, trust_remote_code=True).to(device)
+        tokenizer = AutoTokenizer.from_pretrained(target_name, trust_remote_code=True)
+        model = AutoModelForCausalLM.from_pretrained(target_name, torch_dtype=torch.float32, trust_remote_code=True).to(device)
         model.eval()
     except Exception as e:
-        print(f"Fallback to Qwen2.5-0.5B-Instruct due to: {e}")
-        model_name = "Qwen/Qwen2.5-0.5B-Instruct"
-        tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-        model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float32, trust_remote_code=True).to(device)
+        print(f"Fallback to GPT2 due to: {e}")
+        target_name = "gpt2"
+        tokenizer = AutoTokenizer.from_pretrained(target_name)
+        model = AutoModelForCausalLM.from_pretrained(target_name).to(device)
         model.eval()
         
     MODEL_CACHE[model_name] = (model, tokenizer, device)

@@ -79,7 +79,15 @@ def start_interactive_chat():
                 allocated_k = len(tree_topo.nodes)
 
                 # Generate full text completion using Qwen backbone
-                gen_ids = model.generate(input_ids, max_new_tokens=45, do_sample=True, temperature=0.7, top_p=0.9, pad_token_id=tokenizer.eos_token_id)
+                gen_ids = model.generate(
+                    input_ids,
+                    attention_mask=inputs.get("attention_mask", None),
+                    max_new_tokens=60,
+                    do_sample=True,
+                    temperature=0.7,
+                    top_p=0.9,
+                    pad_token_id=tokenizer.eos_token_id
+                )
                 completion = tokenizer.decode(gen_ids[0][input_ids.shape[1]:], skip_special_tokens=True).strip()
 
             t1 = time.perf_counter()

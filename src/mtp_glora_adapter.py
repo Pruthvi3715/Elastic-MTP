@@ -33,9 +33,9 @@ class GatedLoRAPredictionHead(nn.Module):
         self.gate_proj = nn.Linear(hidden_dim * 2, hidden_dim)
         self.gate_act = nn.Sigmoid()
         
-        # Memory-efficient projection bottleneck
-        self.head_proj = nn.Linear(hidden_dim, hidden_dim, bias=False)
-        self.out_head = None  # Tied dynamically at runtime
+        # Unembedding projection head
+        self.head_proj = nn.Linear(hidden_dim, vocab_size, bias=False)
+        self.out_head = None  # Tied dynamically at runtime if provided
 
     def forward(self, z_t: torch.Tensor, prev_token_emb: torch.Tensor = None) -> torch.Tensor:
         """
@@ -51,14 +51,15 @@ class GatedLoRAPredictionHead(nn.Module):
         g_k = self.gate_act(self.gate_proj(concat_input))
         
         # Modulate hidden representation: z_modulated = z_detached * g_k
-        z_modulated = self.head_proj(z_detached * g_k)
-        
-        # Low-Rank adaptation delta: (z_detached @ A^T) @ B^T
-        lora_hidden = F.linear(z_detached, self.lora_A)
+        z_modulated = z_detached * g_k
         
         if self.out_head is not None:
             return self.out_head(z_modulated)
-        return z_modulated
+            
+        logits_base = self.head_proj(z_modulated)
+        lora_hidden = F.linear(z_detached, self.lora_A)
+        logits_lora = F.linear(lora_hidden, self.lora_B)
+        return logits_base + logits_lora
 
 class MTPGLoRAModule(nn.Module):
     def __init__(self, 

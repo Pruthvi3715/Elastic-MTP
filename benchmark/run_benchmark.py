@@ -73,11 +73,19 @@ def run_benchmark_suite(max_new_tokens: int = 40):
                 "mean_entropy": float(np.mean(entropies)) if entropies else 0.0,
                 "std_entropy": float(np.std(entropies)) if entropies else 0.0,
                 "horizon_counts": {str(k_val): horizons.count(k_val) for k_val in range(1, 9)},
-                "generated_sample": res["generated_text"][:100] + "..."
+                "generated_sample": res["generated_text"][:100] + "...",
+                # Include new research metrics for Elastic-MTP
+                "router_metrics": res.get("router_metrics", {})
             }
             
             results[mode_name].append(res_summary)
-            print(f" Done ({res['tokens_per_sec']:.2f} tok/s, Mean H(P)={res_summary['mean_entropy']:.2f})")
+            
+            # Print enhanced metrics for elastic mode
+            if mode_name == "elastic" and res.get("router_metrics"):
+                metrics = res["router_metrics"]
+                print(f" Done ({res['tokens_per_sec']:.2f} tok/s, Mean H(P)={res_summary['mean_entropy']:.2f}, DAR={metrics.get('draft_acceptance_rate_percent', 'N/A')}%, Contradictions={metrics.get('contradiction_rate_percent', 'N/A')}%)")
+            else:
+                print(f" Done ({res['tokens_per_sec']:.2f} tok/s, Mean H(P)={res_summary['mean_entropy']:.2f})")
 
     # Save to JSON
     output_file = os.path.join(ElasticMTPConfig.RESULTS_DIR, "benchmark_results.json")

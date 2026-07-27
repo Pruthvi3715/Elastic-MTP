@@ -27,42 +27,38 @@ class GatedLoRAPredictionHead(nn.Module):
         
         # Low-rank matrices A_k and B_k
         self.lora_A = nn.Parameter(torch.randn(rank, hidden_dim) * 0.01)
-        self.lora_B = nn.Parameter(torch.zeros(vocab_size, rank))
+        self.lora_B = nn.Parameter(torch.zeros(min(vocab_size, 32000), rank))
         
         # Information-dependent Gating Network: W_g @ [z_t; e(y_{t+k-1})]
-        # Input dimension: hidden_dim (z_t) + hidden_dim (embedding)
         self.gate_proj = nn.Linear(hidden_dim * 2, hidden_dim)
         self.gate_act = nn.Sigmoid()
         
-        # Unembedding output head
-        self.head_proj = nn.Linear(hidden_dim, vocab_size, bias=False)
+        # Memory-efficient projection bottleneck
+        self.head_proj = nn.Linear(hidden_dim, hidden_dim, bias=False)
+        self.out_head = None  # Tied dynamically at runtime
 
     def forward(self, z_t: torch.Tensor, prev_token_emb: torch.Tensor = None) -> torch.Tensor:
         """
         z_t: (batch_size, hidden_dim) - Base model hidden state (Detached)
         prev_token_emb: (batch_size, hidden_dim) - Embedding of offset token
         """
-        # Detach z_t to enforce gradient detachment safety boundary
         z_detached = z_t.detach()
-        
         if prev_token_emb is None:
             prev_token_emb = torch.zeros_like(z_detached)
             
         # Compute dynamic gating vector g_k
         concat_input = torch.cat([z_detached, prev_token_emb], dim=-1)
-        g_k = self.gate_act(self.gate_proj(concat_input)) # (batch_size, hidden_dim)
+        g_k = self.gate_act(self.gate_proj(concat_input))
         
         # Modulate hidden representation: z_modulated = z_detached * g_k
-        z_modulated = z_detached * g_k
+        z_modulated = self.head_proj(z_detached * g_k)
         
-        # Compute base head projection logits
-        logits_base = self.head_proj(z_modulated)
+        # Low-Rank adaptation delta: (z_detached @ A^T) @ B^T
+        lora_hidden = F.linear(z_detached, self.lora_A)
         
-        # Compute Low-Rank adaptation delta: (z_detached @ A^T) @ B^T
-        lora_hidden = F.linear(z_detached, self.lora_A) # (batch_size, rank)
-        logits_lora = F.linear(lora_hidden, self.lora_B) # (batch_size, vocab_size)
-        
-        return logits_base + logits_lora
+        if self.out_head is not None:
+            return self.out_head(z_modulated)
+        return z_modulated
 
 class MTPGLoRAModule(nn.Module):
     def __init__(self, 

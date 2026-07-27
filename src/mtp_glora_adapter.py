@@ -27,14 +27,20 @@ class GatedLoRAPredictionHead(nn.Module):
         
         # Low-rank matrices A_k and B_k
         self.lora_A = nn.Parameter(torch.randn(rank, hidden_dim) * 0.01)
-        self.lora_B = nn.Parameter(torch.zeros(min(vocab_size, 32000), rank))
+        self.lora_B = nn.Parameter(torch.zeros(vocab_size, rank))
         
         # Information-dependent Gating Network: W_g @ [z_t; e(y_{t+k-1})]
         self.gate_proj = nn.Linear(hidden_dim * 2, hidden_dim)
         self.gate_act = nn.Sigmoid()
         
-        # Unembedding projection head
-        self.head_proj = nn.Linear(hidden_dim, vocab_size, bias=False)
+        # Unembedding projection head (Memory-Efficient Bottleneck for large vocabs)
+        if vocab_size > 32000:
+            self.head_proj = nn.Sequential(
+                nn.Linear(hidden_dim, 128, bias=False),
+                nn.Linear(128, vocab_size, bias=False)
+            )
+        else:
+            self.head_proj = nn.Linear(hidden_dim, vocab_size, bias=False)
         self.out_head = None  # Tied dynamically at runtime if provided
 
     def forward(self, z_t: torch.Tensor, prev_token_emb: torch.Tensor = None) -> torch.Tensor:

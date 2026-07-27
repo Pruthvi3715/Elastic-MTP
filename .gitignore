@@ -1,18 +1,19 @@
-```
-# Build artifacts and dependencies
-build/
-dist/
-*.pyc
+# Python & Byte-code
 __pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
 
-# Logs
-*.log
+# Large Model Weights & Checkpoints (>100MB)
+checkpoints/*.pt
+*.bin
+*.safetensors
+*.onnx
 
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
-
-# Benchmark results (if they contain runtime data)
-benchmark/results/
-```
+# Environment & IDE
+.env
+.venv/
+env/
+venv/
+.vscode/
+.idea/

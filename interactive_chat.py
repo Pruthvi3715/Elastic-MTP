@@ -90,7 +90,7 @@ def start_interactive_chat():
                 gen_ids = model.generate(
                     input_ids,
                     attention_mask=inputs.get("attention_mask", None),
-                    max_new_tokens=60,
+                    max_new_tokens=200,
                     do_sample=True,
                     temperature=0.7,
                     top_p=0.9,

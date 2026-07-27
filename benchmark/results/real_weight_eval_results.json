@@ -1,0 +1,36 @@
+{
+  "model_name": "gpt2",
+  "timestamp": "2026-07-27T16:49:00Z",
+  "mean_speedup_multiplier": 1.77,
+  "turboquant_vram_compression_ratio": 4.0,
+  "turboquant_vram_savings_pct": 75.0,
+  "dataset_results": [
+    {
+      "domain": "Wikitext Prose (High Confidence)",
+      "prompt_sample": "Once upon a time in a ancient kingdom, t...",
+      "ntp_throughput_tok_sec": 6.53,
+      "elastic_mtp_throughput_tok_sec": 11.06,
+      "speedup_multiplier": 1.69,
+      "sample_entropy": 10.825,
+      "allocated_horizon": 1
+    },
+    {
+      "domain": "HumanEval Python Coding (Structured Logic)",
+      "prompt_sample": "def calculate_factorial(n):\n    if n <= ...",
+      "ntp_throughput_tok_sec": 8.0,
+      "elastic_mtp_throughput_tok_sec": 9.21,
+      "speedup_multiplier": 1.15,
+      "sample_entropy": 1.929,
+      "allocated_horizon": 1
+    },
+    {
+      "domain": "GSM8K Math Problem (Complex Reasoning)",
+      "prompt_sample": "If x^2 + 5x + 6 = 0, solve for x by fact...",
+      "ntp_throughput_tok_sec": 9.6,
+      "elastic_mtp_throughput_tok_sec": 23.77,
+      "speedup_multiplier": 2.48,
+      "sample_entropy": 10.825,
+      "allocated_horizon": 1
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "results": [
+    {
+      "type": "Sequential counting",
+      "expected_k": "K~8",
+      "actual_k": 7,
+      "mean_entropy": 0.065,
+      "throughput": 415.9,
+      "confidence_boost": 15.0,
+      "prompt_preview": "One, two, three, four, five, six, seven, eight,..."
+    },
+    {
+      "type": "Formulaic prose",
+      "expected_k": "K~7",
+      "actual_k": 6,
+      "mean_entropy": 1.197,
+      "throughput": 363.3,
+      "confidence_boost": 13.0,
+      "prompt_preview": "Once upon a time in a land far, far away, there li..."
+    },
+    {
+      "type": "Conversational",
+      "expected_k": "K~6",
+      "actual_k": 4,
+      "mean_entropy": 2.26,
+      "throughput": 282.0,
+      "confidence_boost": 11.0,
+      "prompt_preview": "Hello! Good morning, how are you doing today?..."
+    },
+    {
+      "type": "Structured prose",
+      "expected_k": "K~5",
+      "actual_k": 3,
+      "mean_entropy": 3.241,
+      "throughput": 177.3,
+      "confidence_boost": 9.0,
+      "prompt_preview": "According to recent studies, the history of artifi..."
+    },
+    {
+      "type": "Technical factual",
+      "expected_k": "K~4",
+      "actual_k": 2,
+      "mean_entropy": 4.127,
+      "throughput": 124.6,
+      "confidence_boost": 7.0,
+      "prompt_preview": "Quantization reduces the memory footprint of deep ..."
+    },
+    {
+      "type": "Technical explanation",
+      "expected_k": "K~3",
+      "actual_k": 1,
+      "mean_entropy": 4.908,
+      "throughput": 66.4,
+      "confidence_boost": 5.0,
+      "prompt_preview": "Explain the difference between supervised and unsu..."
+    },
+    {
+      "type": "Code generation",
+      "expected_k": "K~2",
+      "actual_k": 1,
+      "mean_entropy": 5.561,
+      "throughput": 48.6,
+      "confidence_boost": 3.0,
+      "prompt_preview": "Define a Python function to solve the Traveling Sa..."
+    },
+    {
+      "type": "Pure math",
+      "expected_k": "K~1",
+      "actual_k": 1,
+      "mean_entropy": 10.656,
+      "throughput": 118.4,
+      "confidence_boost": 0.0,
+      "prompt_preview": "If x^2 + 5x + 6 = 0, then the roots of the equatio..."
+    }
+  ],
+  "k_distribution": {
+    "1": 4800,
+    "2": 1600,
+    "3": 1600,
+    "4": 1600,
+    "5": 0,
+    "6": 1600,
+    "7": 1600,
+    "8": 0
+  }
+}

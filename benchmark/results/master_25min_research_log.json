@@ -1,0 +1,84 @@
+{
+  "pipeline_name": "25-Minute Real-Time Autonomous Research Loop",
+  "total_cycles": 5,
+  "current_completed_cycles": 5,
+  "elapsed_time_sec": 1442.09,
+  "remaining_time_sec": 57.91000000000008,
+  "cycles_history": [
+    {
+      "cycle": 1,
+      "phase": "Cycle 1 (Min 0-5): Gated-LoRA Rank & Scale Optimization",
+      "research_focus": "Evaluating parameter efficiency vs representation capacity across LoRA ranks r in {4, 8, 16, 32}.",
+      "parameters_tested": {
+        "TAU_ENTROPY": 1.2,
+        "TAU_DIVERGENCE": 0.25,
+        "MAX_K": 8
+      },
+      "score": 1000.3386742817825,
+      "throughput_tok_sec": 571.62209958959,
+      "status": "ACCEPTED",
+      "elapsed_cycle_sec": 240.43,
+      "total_elapsed_sec": 240.43
+    },
+    {
+      "cycle": 2,
+      "phase": "Cycle 2 (Min 5-10): Logit Clamping & Softmax Temperature",
+      "research_focus": "Testing logit clamping bounds [-50, 50] to suppress extreme tail noise in INT4 quantized logits.",
+      "parameters_tested": {
+        "TAU_ENTROPY": 1.25,
+        "TAU_DIVERGENCE": 0.24,
+        "MAX_K": 8
+      },
+      "score": 925.5851546363541,
+      "throughput_tok_sec": 528.9058026493452,
+      "status": "RETAINED_OPTIMAL",
+      "elapsed_cycle_sec": 240.44,
+      "total_elapsed_sec": 540.87
+    },
+    {
+      "cycle": 3,
+      "phase": "Cycle 3 (Min 10-15): Fused GPU Entropy Kernel Efficiency",
+      "research_focus": "Benchmarking single-pass max-shifted log-softmax entropy kernel to eliminate VRAM allocations.",
+      "parameters_tested": {
+        "TAU_ENTROPY": 1.3,
+        "TAU_DIVERGENCE": 0.26,
+        "MAX_K": 8
+      },
+      "score": 1050.6321006351384,
+      "throughput_tok_sec": 600.3612003629362,
+      "status": "ACCEPTED",
+      "elapsed_cycle_sec": 240.39,
+      "total_elapsed_sec": 841.26
+    },
+    {
+      "cycle": 4,
+      "phase": "Cycle 4 (Min 15-20): Quantization Noise Robustness (AWQ INT4)",
+      "research_focus": "Stress-testing dynamic horizon collapse behavior under 4-bit zero-point quantization noise.",
+      "parameters_tested": {
+        "TAU_ENTROPY": 1.15,
+        "TAU_DIVERGENCE": 0.22,
+        "MAX_K": 8
+      },
+      "score": 939.0861481674343,
+      "throughput_tok_sec": 536.6206560956767,
+      "status": "RETAINED_OPTIMAL",
+      "elapsed_cycle_sec": 240.45,
+      "total_elapsed_sec": 1141.71
+    },
+    {
+      "cycle": 5,
+      "phase": "Cycle 5 (Min 20-25): Multi-Prompt Pareto Frontier Synthesis",
+      "research_focus": "Synthesizing optimal dynamic speculation thresholds across language, code, and math prompts.",
+      "parameters_tested": {
+        "TAU_ENTROPY": 1.2,
+        "TAU_DIVERGENCE": 0.25,
+        "MAX_K": 8
+      },
+      "score": 1115.2833965374334,
+      "throughput_tok_sec": 637.3047980213905,
+      "status": "ACCEPTED",
+      "elapsed_cycle_sec": 240.38,
+      "total_elapsed_sec": 1442.09
+    }
+  ]
+}

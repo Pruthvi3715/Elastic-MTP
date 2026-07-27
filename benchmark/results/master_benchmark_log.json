@@ -1,0 +1,64 @@
+{
+  "project_name": "Elastic-MTP: Uncertainty-Aware Dynamic Horizon Multi-Token Prediction",
+  "last_updated": "2026-07-27T21:12:40Z",
+  "optimal_parameters": {
+    "tau_entropy": 1.50,
+    "tau_divergence": 0.30,
+    "max_k": 8,
+    "logit_clamp_min": -100.0,
+    "logit_clamp_max": 100.0
+  },
+  "unit_tests": {
+    "total_tests": 11,
+    "passed_tests": 11,
+    "execution_time_sec": 0.017,
+    "status": "ALL_PASSED"
+  },
+  "benchmark_summary": {
+    "ntp_baseline_throughput_tok_sec": 216.38,
+    "static_mtp_throughput_tok_sec": 782.26,
+    "elastic_mtp_peak_throughput_tok_sec": 1315.32,
+    "elastic_mtp_speedup_multiplier": 6.08,
+    "hard_prompt_accuracy_protection": "100.0% (Horizon automatically collapses to K=1 on High Entropy H(P) > 1.50)"
+  },
+  "autoresearch_50_iteration_sweep": {
+    "total_experiments_evaluated": 50,
+    "baseline_score": 124.14,
+    "optimal_score": 276.61,
+    "score_improvement_percentage": 122.8,
+    "winning_proposal": "Grid Pair (tau_entropy=1.50, tau_divergence=0.30)",
+    "registry_path": "autoresearch/autoresearch_registry.json",
+    "pareto_chart_path": "benchmark/plots/autoresearch_pareto_frontier.png"
+  },
+  "quantization_stress_test": {
+    "fp16_baseline": {
+      "mean_entropy": 6.611,
+      "mean_horizon_k": 1.0,
+      "accuracy_retention_pct": 100.0
+    },
+    "int8_uniform": {
+      "mean_entropy": 6.559,
+      "mean_horizon_k": 1.0,
+      "accuracy_retention_pct": 97.0
+    },
+    "int4_awq": {
+      "mean_entropy": 6.368,
+      "mean_horizon_k": 1.0,
+      "accuracy_retention_pct": 50.0
+    },
+    "chart_path": "benchmark/plots/quantization_decay_curve.png"
+  },
+  "fused_entropy_router": {
+    "status": "INTEGRATED_IN_ENGINE",
+    "mean_execution_time_ms": 0.4516,
+    "intermediate_vram_allocation_bytes": 0,
+    "test_suite_speedup": "2x Faster Unit Test Runtime (0.017s)"
+  },
+  "gated_lora_adapter": {
+    "num_aux_heads": 3,
+    "rank": 8,
+    "parameter_overhead_pct": 3.4,
+    "gradient_detachment_verified": true,
+    "checkpoint_path": "checkpoints/mtp_glora_adapter.pt"
+  }
+}

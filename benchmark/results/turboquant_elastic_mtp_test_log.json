@@ -1,0 +1,55 @@
+{
+  "suite_name": "Google TurboQuant + Elastic-MTP Integrated Performance Test Suite",
+  "timestamp": "2026-07-27T16:35:26Z",
+  "total_tests": 4,
+  "passed_tests": 4,
+  "failed_tests": 0,
+  "overall_status": "ALL_TESTS_PASSED",
+  "total_duration_sec": 0.643,
+  "test_cases": [
+    {
+      "test_id": "Test01",
+      "test_name": "Test01_TurboQuant_Compression_Ratio_Verification",
+      "status": "PASS",
+      "metrics": {
+        "baseline_vram_mb": 512.0,
+        "compressed_vram_mb": 128.0,
+        "compression_ratio": 4.0,
+        "vram_savings_pct": 75.0
+      },
+      "duration_sec": 0.005
+    },
+    {
+      "test_id": "Test02",
+      "test_name": "Test02_TurboQuant_QJL_Directional_Fidelity",
+      "status": "PASS",
+      "metrics": {
+        "vector_cosine_similarity_pct": 90.63346982002258,
+        "fidelity_status": "HIGH_PRECISION"
+      },
+      "duration_sec": 0.032
+    },
+    {
+      "test_id": "Test03",
+      "test_name": "Test03_Speculative_KV_Cache_Rollback_Fidelity",
+      "status": "PASS",
+      "metrics": {
+        "pre_rollback_length": 10,
+        "tokens_discarded": 3,
+        "post_rollback_length": 7
+      },
+      "duration_sec": 0.0
+    },
+    {
+      "test_id": "Test04",
+      "test_name": "Test04_Combined_ElasticMTP_TurboQuant_Throughput_Speedup",
+      "status": "PASS",
+      "metrics": {
+        "ntp_throughput_tok_sec": 113.27198824587829,
+        "elastic_mtp_throughput_tok_sec": 782.0087928354427,
+        "speedup_multiplier": 6.903814481811201
+      },
+      "duration_sec": 0.606
+    }
+  ]
+}

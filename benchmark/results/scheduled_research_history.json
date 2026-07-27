@@ -1,0 +1,77 @@
+[
+  {
+    "pass_number": 1,
+    "timestamp": "2026-07-27T15:45:21Z",
+    "hypothesis": "Temperature-Weighted Soft Entropy H(P/T) with T=0.85",
+    "parameters": {
+      "tau_entropy": 1.45,
+      "tau_divergence": 0.28,
+      "max_k": 8
+    },
+    "score": 716.8785911930861,
+    "throughput_tok_sec": 409.64490925319205,
+    "acceptance_rate_pct": 75.0,
+    "status": "ACCEPTED",
+    "elapsed_sec": 0.56
+  },
+  {
+    "pass_number": 2,
+    "timestamp": "2026-07-27T15:45:35Z",
+    "hypothesis": "Strict Divergence Protection (tau_divergence=0.22)",
+    "parameters": {
+      "tau_entropy": 1.5,
+      "tau_divergence": 0.22,
+      "max_k": 8
+    },
+    "score": 773.5554577822544,
+    "throughput_tok_sec": 442.0316901612882,
+    "acceptance_rate_pct": 75.0,
+    "status": "ACCEPTED",
+    "elapsed_sec": 0.57
+  },
+  {
+    "pass_number": 3,
+    "timestamp": "2026-07-27T15:45:48Z",
+    "hypothesis": "Expanded Speculation Horizon (max_k=10)",
+    "parameters": {
+      "tau_entropy": 1.55,
+      "tau_divergence": 0.32,
+      "max_k": 10
+    },
+    "score": 848.7393429096531,
+    "throughput_tok_sec": 484.99391023408754,
+    "acceptance_rate_pct": 75.0,
+    "status": "ACCEPTED",
+    "elapsed_sec": 0.49
+  },
+  {
+    "pass_number": 4,
+    "timestamp": "2026-07-27T15:46:00Z",
+    "hypothesis": "Ultra-Low Entropy Gate (tau_entropy=1.20)",
+    "parameters": {
+      "tau_entropy": 1.2,
+      "tau_divergence": 0.25,
+      "max_k": 8
+    },
+    "score": 857.4220549525717,
+    "throughput_tok_sec": 489.9554599728981,
+    "acceptance_rate_pct": 75.0,
+    "status": "ACCEPTED",
+    "elapsed_sec": 0.49
+  },
+  {
+    "pass_number": 5,
+    "timestamp": "2026-07-27T15:46:12Z",
+    "hypothesis": "Balanced Pareto Pair (tau_entropy=1.50, tau_divergence=0.30)",
+    "parameters": {
+      "tau_entropy": 1.5,
+      "tau_divergence": 0.3,
+      "max_k": 8
+    },
+    "score": 797.2251472995702,
+    "throughput_tok_sec": 455.55722702832577,
+    "acceptance_rate_pct": 75.0,
+    "status": "REJECTED",
+    "elapsed_sec": 0.56
+  }
+]

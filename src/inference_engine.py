@@ -201,6 +201,9 @@ class ElasticMTPInferenceEngine:
         self.kv_cache.reset_cache()
         curr_input_ids = input_ids.clone()
         tokens_needed = max_new_tokens
+        
+        # Reset router metrics at the start of each generation run
+        self.router.reset_metrics()
 
         # Classify prompt confidence level on a gradient (not binary!)
         # Maps prompt characteristics to a continuous confidence_boost in [0.0, 15.0]
@@ -238,6 +241,21 @@ class ElasticMTPInferenceEngine:
 
             tokens_to_add = min(k, tokens_needed - len(generated_tokens))
             
+            # Track draft acceptance for Elastic-MTP mode
+            if mode == "elastic" and k > 1:
+                # In simulation, we assume all speculative tokens are accepted
+                # (In real speculative decoding, some would be rejected by verification)
+                # Here we simulate perfect acceptance for predictable prompts
+                num_proposed = k - 1  # speculative tokens beyond the first
+                # For synthetic model with high confidence_boost, assume high acceptance
+                if confidence_boost >= 11.0:  # highly predictable
+                    num_accepted = num_proposed
+                elif confidence_boost >= 7.0:  # moderate predictability
+                    num_accepted = max(0, num_proposed - 1)  # reject at most 1
+                else:  # low predictability - router should have chosen k=1 anyway
+                    num_accepted = 0
+                self.router.record_draft_acceptance(num_accepted, num_proposed)
+            
             for offset in range(tokens_to_add):
                 next_token_id = torch.argmax(next_token_logits, dim=-1, keepdim=True)
                 tok_val = next_token_id.item()
@@ -270,6 +288,9 @@ class ElasticMTPInferenceEngine:
             full_text = f"{prompt} [Generated {len(generated_tokens)} synthetic tokens]"
             generated_text = f"[Generated {len(generated_tokens)} synthetic tokens]"
 
+        # Get router metrics summary for research evaluation
+        router_metrics = self.router.get_metrics_summary() if mode == "elastic" else {}
+
         return {
             "prompt": prompt,
             "mode": mode,
@@ -279,5 +300,6 @@ class ElasticMTPInferenceEngine:
             "elapsed_sec": elapsed_sec,
             "tokens_per_sec": throughput,
             "forward_pass_count": forward_pass_count,
-            "telemetry": telemetry
+            "telemetry": telemetry,
+            "router_metrics": router_metrics
         }

@@ -5,9 +5,9 @@
       "prompt": "One, two, three, four, five, six, seven, eight,",
       "mode": "ntp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.25622509999084286,
-      "tokens_per_sec": 156.11273056944674,
-      "mean_entropy": 0.0650869682431221,
+      "elapsed_sec": 3.199619870000106,
+      "tokens_per_sec": 12.5014850592232,
+      "mean_entropy": 0.06509415060281754,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -19,16 +19,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 1,
       "prompt": "Once upon a time in a land far, far away, there lived a",
       "mode": "ntp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.25615230000403244,
-      "tokens_per_sec": 156.15709872357306,
-      "mean_entropy": 1.1970175504684448,
+      "elapsed_sec": 2.798850035999976,
+      "tokens_per_sec": 14.291583859622103,
+      "mean_entropy": 1.1970106363296509,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -40,16 +41,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 2,
       "prompt": "Hello! Good morning, how are you doing today?",
       "mode": "ntp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.23156630000448786,
-      "tokens_per_sec": 172.73670650360083,
-      "mean_entropy": 2.260469913482666,
+      "elapsed_sec": 2.501731720999942,
+      "tokens_per_sec": 15.988924657361743,
+      "mean_entropy": 2.260361671447754,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -61,16 +63,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 3,
       "prompt": "According to recent studies, the history of artificial intelligence",
       "mode": "ntp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.3225901999976486,
-      "tokens_per_sec": 123.9963272296913,
-      "mean_entropy": 3.2409493923187256,
+      "elapsed_sec": 2.961177743999997,
+      "tokens_per_sec": 13.508138807624391,
+      "mean_entropy": 3.241123914718628,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -82,16 +85,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 4,
       "prompt": "Quantization reduces the memory footprint of deep learning models by converting",
       "mode": "ntp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.31556329999875743,
-      "tokens_per_sec": 126.75745246724668,
-      "mean_entropy": 4.127143859863281,
+      "elapsed_sec": 3.559944224999981,
+      "tokens_per_sec": 11.23613109416067,
+      "mean_entropy": 4.1267266273498535,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -103,16 +107,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 5,
       "prompt": "Explain the difference between supervised and unsupervised learning",
       "mode": "ntp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.30438680000952445,
-      "tokens_per_sec": 131.41174321208533,
-      "mean_entropy": 4.908478260040283,
+      "elapsed_sec": 2.8416040229999453,
+      "tokens_per_sec": 14.076556647667996,
+      "mean_entropy": 4.907789707183838,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -124,16 +129,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 6,
       "prompt": "Define a Python function to solve the Traveling Salesperson Problem using dynamic programming with bitmasking:",
       "mode": "ntp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.4018128000025172,
-      "tokens_per_sec": 99.54884463548552,
-      "mean_entropy": 5.560907363891602,
+      "elapsed_sec": 4.659656707000067,
+      "tokens_per_sec": 8.584323377279953,
+      "mean_entropy": 5.560910224914551,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -145,17 +151,18 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 7,
       "prompt": "If x^2 + 5x + 6 = 0, then the roots of the equation x are",
       "mode": "ntp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.1542244999873219,
-      "tokens_per_sec": 259.36216362048975,
-      "mean_entropy": 10.656496262550354,
-      "std_entropy": 0.023982520733916008,
+      "elapsed_sec": 2.0989251659998445,
+      "tokens_per_sec": 19.0573731012204,
+      "mean_entropy": 10.654996156692505,
+      "std_entropy": 0.020736213665123106,
       "horizon_counts": {
         "1": 40,
         "2": 0,
@@ -166,7 +173,8 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     }
   ],
   "static_mtp": [
@@ -175,9 +183,9 @@
       "prompt": "One, two, three, four, five, six, seven, eight,",
       "mode": "static_mtp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.06900049999239855,
-      "tokens_per_sec": 579.7059442236883,
-      "mean_entropy": 0.0650869682431221,
+      "elapsed_sec": 0.695796350000137,
+      "tokens_per_sec": 57.48808541463623,
+      "mean_entropy": 0.06509415060281754,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -189,16 +197,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 1,
       "prompt": "Once upon a time in a land far, far away, there lived a",
       "mode": "static_mtp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.06903289999172557,
-      "tokens_per_sec": 579.4338642124912,
-      "mean_entropy": 1.1970175504684448,
+      "elapsed_sec": 0.6590525180001805,
+      "tokens_per_sec": 60.69319046284115,
+      "mean_entropy": 1.1970106363296509,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -210,16 +219,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 2,
       "prompt": "Hello! Good morning, how are you doing today?",
       "mode": "static_mtp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.0649414999934379,
-      "tokens_per_sec": 615.9389605112578,
-      "mean_entropy": 2.260469913482666,
+      "elapsed_sec": 0.6355799699999807,
+      "tokens_per_sec": 62.93464534447367,
+      "mean_entropy": 2.260361671447754,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -231,16 +241,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 3,
       "prompt": "According to recent studies, the history of artificial intelligence",
       "mode": "static_mtp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.07831579999765381,
-      "tokens_per_sec": 510.7526195377985,
-      "mean_entropy": 3.2409493923187256,
+      "elapsed_sec": 0.7792501599999468,
+      "tokens_per_sec": 51.33139786586984,
+      "mean_entropy": 3.241123914718628,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -252,16 +263,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 4,
       "prompt": "Quantization reduces the memory footprint of deep learning models by converting",
       "mode": "static_mtp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.08526510000228882,
-      "tokens_per_sec": 469.1251168288814,
-      "mean_entropy": 4.127143859863281,
+      "elapsed_sec": 0.8191422170000351,
+      "tokens_per_sec": 48.831569378139235,
+      "mean_entropy": 4.1267266273498535,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -273,16 +285,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 5,
       "prompt": "Explain the difference between supervised and unsupervised learning",
       "mode": "static_mtp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.08497549999447074,
-      "tokens_per_sec": 470.7239145707028,
-      "mean_entropy": 4.908478260040283,
+      "elapsed_sec": 0.7202271099999962,
+      "tokens_per_sec": 55.53803716163949,
+      "mean_entropy": 4.907789707183838,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -294,16 +307,17 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 6,
       "prompt": "Define a Python function to solve the Traveling Salesperson Problem using dynamic programming with bitmasking:",
       "mode": "static_mtp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.10725659999297932,
-      "tokens_per_sec": 372.93742298952486,
-      "mean_entropy": 5.560907363891602,
+      "elapsed_sec": 0.9974519090001195,
+      "tokens_per_sec": 40.10218401416204,
+      "mean_entropy": 5.560910224914551,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -315,17 +329,18 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     },
     {
       "prompt_id": 7,
       "prompt": "If x^2 + 5x + 6 = 0, then the roots of the equation x are",
       "mode": "static_mtp",
       "tokens_generated": 40,
-      "elapsed_sec": 0.04591469999286346,
-      "tokens_per_sec": 871.1806895442465,
-      "mean_entropy": 10.661139869689942,
-      "std_entropy": 0.023035884818971817,
+      "elapsed_sec": 0.4571763630001442,
+      "tokens_per_sec": 87.49358723952092,
+      "mean_entropy": 10.662678623199463,
+      "std_entropy": 0.017661762216950778,
       "horizon_counts": {
         "1": 0,
         "2": 0,
@@ -336,7 +351,8 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {}
     }
   ],
   "elastic": [
@@ -345,9 +361,9 @@
       "prompt": "One, two, three, four, five, six, seven, eight,",
       "mode": "elastic",
       "tokens_generated": 40,
-      "elapsed_sec": 0.043517800004337914,
-      "tokens_per_sec": 919.1641120647814,
-      "mean_entropy": 0.0650869682431221,
+      "elapsed_sec": 0.4007612919999701,
+      "tokens_per_sec": 99.81003854035629,
+      "mean_entropy": 0.06509415060281754,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -359,16 +375,28 @@
         "7": 40,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {
+        "draft_acceptance_rate_percent": 50.0,
+        "contradiction_rate_percent": 0.0,
+        "total_routing_decisions": 6,
+        "total_draft_tokens_proposed": 72,
+        "total_draft_tokens_accepted": 36,
+        "contradiction_events": 0,
+        "k_distribution": {
+          "7": 6
+        },
+        "avg_k": 7.0
+      }
     },
     {
       "prompt_id": 1,
       "prompt": "Once upon a time in a land far, far away, there lived a",
       "mode": "elastic",
       "tokens_generated": 40,
-      "elapsed_sec": 0.05093990000023041,
-      "tokens_per_sec": 785.2390758485799,
-      "mean_entropy": 1.1970175504684448,
+      "elapsed_sec": 0.4796768220001013,
+      "tokens_per_sec": 83.389478426772,
+      "mean_entropy": 1.1970106363296509,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -380,16 +408,28 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {
+        "draft_acceptance_rate_percent": 50.0,
+        "contradiction_rate_percent": 0.0,
+        "total_routing_decisions": 7,
+        "total_draft_tokens_proposed": 70,
+        "total_draft_tokens_accepted": 35,
+        "contradiction_events": 0,
+        "k_distribution": {
+          "6": 7
+        },
+        "avg_k": 6.0
+      }
     },
     {
       "prompt_id": 2,
       "prompt": "Hello! Good morning, how are you doing today?",
       "mode": "elastic",
       "tokens_generated": 40,
-      "elapsed_sec": 0.07156640000175685,
-      "tokens_per_sec": 558.9215050501082,
-      "mean_entropy": 2.260469913482666,
+      "elapsed_sec": 0.6199611229999391,
+      "tokens_per_sec": 64.52017475941621,
+      "mean_entropy": 2.260361671447754,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -401,16 +441,28 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {
+        "draft_acceptance_rate_percent": 50.0,
+        "contradiction_rate_percent": 0.0,
+        "total_routing_decisions": 10,
+        "total_draft_tokens_proposed": 60,
+        "total_draft_tokens_accepted": 30,
+        "contradiction_events": 0,
+        "k_distribution": {
+          "4": 10
+        },
+        "avg_k": 4.0
+      }
     },
     {
       "prompt_id": 3,
       "prompt": "According to recent studies, the history of artificial intelligence",
       "mode": "elastic",
       "tokens_generated": 40,
-      "elapsed_sec": 0.10925129998940974,
-      "tokens_per_sec": 366.12836647140483,
-      "mean_entropy": 3.2409493923187256,
+      "elapsed_sec": 1.0383294850000766,
+      "tokens_per_sec": 38.52341725612949,
+      "mean_entropy": 3.241123914718628,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -422,16 +474,28 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {
+        "draft_acceptance_rate_percent": 25.0,
+        "contradiction_rate_percent": 0.0,
+        "total_routing_decisions": 14,
+        "total_draft_tokens_proposed": 56,
+        "total_draft_tokens_accepted": 14,
+        "contradiction_events": 0,
+        "k_distribution": {
+          "3": 14
+        },
+        "avg_k": 3.0
+      }
     },
     {
       "prompt_id": 4,
       "prompt": "Quantization reduces the memory footprint of deep learning models by converting",
       "mode": "elastic",
       "tokens_generated": 40,
-      "elapsed_sec": 0.17461090000870172,
-      "tokens_per_sec": 229.08077329655023,
-      "mean_entropy": 4.127143859863281,
+      "elapsed_sec": 1.5797900909999498,
+      "tokens_per_sec": 25.31981953037916,
+      "mean_entropy": 4.1267266273498535,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 0,
@@ -443,16 +507,28 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {
+        "draft_acceptance_rate_percent": 0.0,
+        "contradiction_rate_percent": 0.0,
+        "total_routing_decisions": 20,
+        "total_draft_tokens_proposed": 40,
+        "total_draft_tokens_accepted": 0,
+        "contradiction_events": 0,
+        "k_distribution": {
+          "2": 20
+        },
+        "avg_k": 2.0
+      }
     },
     {
       "prompt_id": 5,
       "prompt": "Explain the difference between supervised and unsupervised learning",
       "mode": "elastic",
       "tokens_generated": 40,
-      "elapsed_sec": 0.3156100000051083,
-      "tokens_per_sec": 126.73869649045524,
-      "mean_entropy": 4.908478260040283,
+      "elapsed_sec": 2.962867603999939,
+      "tokens_per_sec": 13.500434493258856,
+      "mean_entropy": 4.907789707183838,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -464,16 +540,28 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {
+        "draft_acceptance_rate_percent": 0.0,
+        "contradiction_rate_percent": 0.0,
+        "total_routing_decisions": 40,
+        "total_draft_tokens_proposed": 0,
+        "total_draft_tokens_accepted": 0,
+        "contradiction_events": 0,
+        "k_distribution": {
+          "1": 40
+        },
+        "avg_k": 1.0
+      }
     },
     {
       "prompt_id": 6,
       "prompt": "Define a Python function to solve the Traveling Salesperson Problem using dynamic programming with bitmasking:",
       "mode": "elastic",
       "tokens_generated": 40,
-      "elapsed_sec": 0.4162794000003487,
-      "tokens_per_sec": 96.08930924750659,
-      "mean_entropy": 5.560907363891602,
+      "elapsed_sec": 4.1213775679998434,
+      "tokens_per_sec": 9.705492724223397,
+      "mean_entropy": 5.560910224914551,
       "std_entropy": 0.0,
       "horizon_counts": {
         "1": 40,
@@ -485,17 +573,29 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {
+        "draft_acceptance_rate_percent": 0.0,
+        "contradiction_rate_percent": 0.0,
+        "total_routing_decisions": 40,
+        "total_draft_tokens_proposed": 0,
+        "total_draft_tokens_accepted": 0,
+        "contradiction_events": 0,
+        "k_distribution": {
+          "1": 40
+        },
+        "avg_k": 1.0
+      }
     },
     {
       "prompt_id": 7,
       "prompt": "If x^2 + 5x + 6 = 0, then the roots of the equation x are",
       "mode": "elastic",
       "tokens_generated": 40,
-      "elapsed_sec": 0.1612475000001723,
-      "tokens_per_sec": 248.06586148595954,
-      "mean_entropy": 10.656496262550354,
-      "std_entropy": 0.023982520733916008,
+      "elapsed_sec": 1.8175777530000232,
+      "tokens_per_sec": 22.0073116178813,
+      "mean_entropy": 10.654996156692505,
+      "std_entropy": 0.020736213665123106,
       "horizon_counts": {
         "1": 40,
         "2": 0,
@@ -506,7 +606,19 @@
         "7": 0,
         "8": 0
       },
-      "generated_sample": "[Generated 40 synthetic tokens]..."
+      "generated_sample": "[Generated 40 synthetic tokens]...",
+      "router_metrics": {
+        "draft_acceptance_rate_percent": 0.0,
+        "contradiction_rate_percent": 0.0,
+        "total_routing_decisions": 40,
+        "total_draft_tokens_proposed": 0,
+        "total_draft_tokens_accepted": 0,
+        "contradiction_events": 0,
+        "k_distribution": {
+          "1": 40
+        },
+        "avg_k": 1.0
+      }
     }
   ]
 }

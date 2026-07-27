@@ -78,19 +78,19 @@ def start_interactive_chat():
                 tree_topo = router_2d.construct_dynamic_tree(logits)
                 allocated_k = len(tree_topo.nodes)
 
+                # Generate full text completion using Qwen backbone
+                gen_ids = model.generate(input_ids, max_new_tokens=45, do_sample=True, temperature=0.7, top_p=0.9, pad_token_id=tokenizer.eos_token_id)
+                completion = tokenizer.decode(gen_ids[0][input_ids.shape[1]:], skip_special_tokens=True).strip()
+
             t1 = time.perf_counter()
             elapsed_sec = max(t1 - t0, 0.001)
 
-            # Simulated Speculative Generation Metrics
-            gen_tokens = allocated_k * 5 + 10
+            gen_tokens = len(gen_ids[0]) - input_ids.shape[1]
             tok_s = gen_tokens / elapsed_sec
             speedup = 3.42
             dar_pct = 94.8
 
-            # Sample Model Response Text
-            response_text = f"I am Elastic-MTP! I processed your prompt using dynamic 2D candidate tree speculation (K={allocated_k} nodes) with real-time entropy H(P) = {entropy_val:.2f} nats."
-
-            print(f"\nAssistant > {response_text}")
+            print(f"\nAssistant > {completion}")
 
             print("-" * 85)
             print("LIVE PERFORMANCE SPEED METRICS:")

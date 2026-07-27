@@ -156,7 +156,7 @@ def generate_speculative_stream(prompt: str, strategy: str, model_choice: str):
 
 
 def create_gradio_app():
-    with gr.Blocks(title="Elastic-MTP Interactive Web UI", theme=gr.themes.Soft()) as demo:
+    with gr.Blocks(title="Elastic-MTP Interactive Web UI") as demo:
         gr.Markdown(
             """
             # 🚀 Elastic-MTP: Real-Time Speculative Decoding & Entropy Visualizer
@@ -217,4 +217,4 @@ def create_gradio_app():
 if __name__ == "__main__":
     app = create_gradio_app()
     print("\n[OK] Launching Elastic-MTP Interactive Web UI on http://localhost:7860 ...")
-    app.launch(server_name="127.0.0.1", server_port=7860, share=False)
+    app.launch(server_name="127.0.0.1", server_port=7860, share=False, theme=gr.themes.Soft())

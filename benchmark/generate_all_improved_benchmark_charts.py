@@ -217,11 +217,11 @@ def generate_all_improved_charts():
     axes[0, 0].plot(milestones, speedups, marker="o", linewidth=3, color="#1b9e77")
     b_p1 = axes[0, 0].bar(milestones, speedups, color=colors, alpha=0.4, width=0.5)
     axes[0, 0].set_title("1. Speculative Speedup Trajectory (x)", fontweight="bold")
-    axes[0, 0].set_ylim(0, 6.0)
+    axes[0, 0].set_ylim(0, 9.5)
     axes[0, 0].grid(axis="y", linestyle="--", alpha=0.5)
-    axes[0, 0].tick_params(axis="x", rotation=15, labelsize=9)
+    axes[0, 0].tick_params(axis="x", rotation=30, labelsize=8)
     for b in b_p1:
-        axes[0, 0].text(b.get_x() + b.get_width()/2, b.get_height() + 0.15, f"{b.get_height():.2f}x", ha="center", fontweight="bold", fontsize=9)
+        axes[0, 0].text(b.get_x() + b.get_width()/2, b.get_height() + 0.18, f"{b.get_height():.2f}x", ha="center", fontweight="bold", fontsize=8)
 
     # Panel 2
     axes[0, 1].plot(milestones, dars, marker="s", linewidth=3, color="#377eb8")
@@ -229,27 +229,27 @@ def generate_all_improved_charts():
     axes[0, 1].set_title("2. Draft Acceptance Rate (DAR %) Evolution", fontweight="bold")
     axes[0, 1].set_ylim(0, 115)
     axes[0, 1].grid(axis="y", linestyle="--", alpha=0.5)
-    axes[0, 1].tick_params(axis="x", rotation=15, labelsize=9)
+    axes[0, 1].tick_params(axis="x", rotation=30, labelsize=8)
     for b in b_p2:
         if b.get_height() > 0:
-            axes[0, 1].text(b.get_x() + b.get_width()/2, b.get_height() + 2.5, f"{b.get_height():.1f}%", ha="center", fontweight="bold", fontsize=9)
+            axes[0, 1].text(b.get_x() + b.get_width()/2, b.get_height() + 2.5, f"{b.get_height():.1f}%", ha="center", fontweight="bold", fontsize=8)
 
     # Panel 3
     axes[1, 0].plot(milestones, concurrency, marker="^", linewidth=3, color="#984ea3")
     b_p3 = axes[1, 0].bar(milestones, concurrency, color=colors, alpha=0.4, width=0.5)
     axes[1, 0].set_title("3. Concurrent Streams / 24GB GPU", fontweight="bold")
-    axes[1, 0].set_ylim(0, 300)
+    axes[1, 0].set_ylim(0, 600)
     axes[1, 0].grid(axis="y", linestyle="--", alpha=0.5)
-    axes[1, 0].tick_params(axis="x", rotation=15, labelsize=9)
+    axes[1, 0].tick_params(axis="x", rotation=30, labelsize=8)
     for b in b_p3:
-        axes[1, 0].text(b.get_x() + b.get_width()/2, b.get_height() + 6.0, f"{int(b.get_height())}", ha="center", fontweight="bold", fontsize=9)
+        axes[1, 0].text(b.get_x() + b.get_width()/2, b.get_height() + 10.0, f"{int(b.get_height())}", ha="center", fontweight="bold", fontsize=8)
 
     # Panel 4
     b_p4 = axes[1, 1].bar(milestones, router_lat, color=colors, alpha=0.85, width=0.5, edgecolor="black")
     axes[1, 1].set_title("4. Router Overhead / Step (ms)", fontweight="bold")
     axes[1, 1].set_ylim(0, 0.65)
     axes[1, 1].grid(axis="y", linestyle="--", alpha=0.5)
-    axes[1, 1].tick_params(axis="x", rotation=15, labelsize=9)
+    axes[1, 1].tick_params(axis="x", rotation=30, labelsize=8)
     for b in b_p4:
         if b.get_height() > 0:
             axes[1, 1].text(b.get_x() + b.get_width()/2, b.get_height() + 0.015, f"{b.get_height():.3f}ms", ha="center", fontweight="bold", fontsize=9)

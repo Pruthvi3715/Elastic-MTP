@@ -9,6 +9,8 @@ import torch
 import torch.nn.functional as F
 from typing import List, Dict, Any, Union
 
+from src.config import ElasticMTPConfig
+
 class RouterResult(dict):
     """Dictionary subclass supporting tuple unpacking (k, meta) for backward compatibility."""
     def __init__(self, k: int, meta: dict):
@@ -23,15 +25,19 @@ class RouterResult(dict):
 
 class DynamicHorizonRouter:
     def __init__(self, 
-                 tau_entropy: float = 5.00,  # Calibrated for real LLM vocabularies (e.g. GPT-2/Llama)
-                 tau_divergence: float = 0.30, 
-                 max_k: int = 8,
+                 tau_entropy: float = None,
+                 tau_divergence: float = None, 
+                 max_k: int = None,
                  entropy_threshold: float = None,
                  divergence_threshold: float = None,
                  max_horizon: int = None):
-        self.tau_entropy = tau_entropy if entropy_threshold is None else entropy_threshold
-        self.tau_divergence = tau_divergence if divergence_threshold is None else divergence_threshold
-        self.max_k = max_k if max_horizon is None else max_horizon
+        default_tau_e = ElasticMTPConfig.ENTROPY_LOW_THRESHOLD
+        default_tau_d = ElasticMTPConfig.CONTRADICTION_THRESHOLD
+        default_k_max = ElasticMTPConfig.K_MAX
+
+        self.tau_entropy = entropy_threshold if entropy_threshold is not None else (tau_entropy if tau_entropy is not None else default_tau_e)
+        self.tau_divergence = divergence_threshold if divergence_threshold is not None else (tau_divergence if tau_divergence is not None else default_tau_d)
+        self.max_k = max_horizon if max_horizon is not None else (max_k if max_k is not None else default_k_max)
         self.max_horizon = self.max_k
         # Metrics tracking for research evaluation
         self.total_draft_tokens = 0
@@ -86,8 +92,8 @@ class DynamicHorizonRouter:
             })
             return RouterResult(1, meta)
 
-        ratio = (self.tau_entropy - entropy_nats) / self.tau_entropy
-        allocated_k = max(1, min(self.max_k, int(1 + ratio * (self.max_k - 1))))
+        ratio = max(0.0, min(1.0, (self.tau_entropy - entropy_nats) / self.tau_entropy))
+        allocated_k = max(1, min(self.max_k, int(round(1 + ratio * (self.max_k - 1)))))
         
         # Track draft tokens proposed
         self.total_draft_tokens += (allocated_k - 1)  # k-1 speculative tokens beyond the first

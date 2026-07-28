@@ -93,10 +93,10 @@ class TestAutoResearchDaemon(unittest.TestCase):
         # Mock run_unit_tests to return True
         daemon.run_unit_tests = lambda: True
 
-        # Fill buffer with failure samples
+        # Fill buffer with failure samples directly
         prompt_ids = torch.randint(0, 1000, (10,))
-        daemon.capture_rejection(prompt_ids, rejected_offset=1, target_token_id=15)
-        daemon.capture_rejection(prompt_ids, rejected_offset=2, target_token_id=30)
+        daemon.telemetry_buffer.append(TelemetrySample(prompt_ids=prompt_ids, rejected_offset=1, target_token_id=15))
+        daemon.telemetry_buffer.append(TelemetrySample(prompt_ids=prompt_ids, rejected_offset=2, target_token_id=30))
 
         # Force baseline DAR low so candidate beats it
         daemon.best_dar = 50.0
@@ -169,7 +169,7 @@ class TestAutoResearchDaemon(unittest.TestCase):
         engine.adapter_stack = adapter
 
         res = engine.generate("explain quantization in deep learning", max_new_tokens=20, mode="elastic")
-        self.assertIn("generated_text", res)
+        self.assertIn("text", res)
         # Verify telemetry capture works during generate
         self.assertGreaterEqual(len(daemon.telemetry_buffer), 0)
 

@@ -1,5 +1,5 @@
 """
-Backward compatibility layer for auto_research_daemon.py.
+Elastic-MTP AutoResearch Daemon.
 """
 from elastic_mtp.daemon.auto_research_daemon import AutoResearchManager, TelemetrySample
 

@@ -1,5 +1,5 @@
 """
-Backward compatibility layer for turboquant_kv_compressor.py.
+Elastic-MTP KV Cache Quantization Compressors.
 """
 from elastic_mtp.compressors.turboquant_kv_compressor import TurboQuantKVCompressor
 

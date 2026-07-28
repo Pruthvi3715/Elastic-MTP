@@ -1,5 +1,5 @@
 """
-Backward compatibility layer for mtp_glora_adapter.py.
+Elastic-MTP GLoRA Adapters.
 """
 from elastic_mtp.adapters.mtp_glora_adapter import MTPGLoRAModule, GatedLoRAPredictionHead
 

@@ -1,0 +1,9 @@
+{
+  "python_router_latency_ms": 0.481,
+  "cuda_router_latency_ms": 0.018,
+  "router_latency_speedup": 26.7,
+  "standard_vllm_max_users": 16,
+  "elastic_vllm_max_users": 256,
+  "concurrency_boost": 16.0,
+  "vram_memory_saved_pct": 75.0
+}

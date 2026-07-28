@@ -1,0 +1,188 @@
+{
+  "FP16 (Half Precision)": {
+    "bits": 16,
+    "avg_k": 3.0,
+    "speedup": 2.57,
+    "dar_percent": 85.71,
+    "contradiction_rate_percent": 0.0,
+    "turboquant_cosine_sim": 0.8415,
+    "k_spectrum": {
+      "1": 200,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 100,
+      "6": 0,
+      "7": 50,
+      "8": 0
+    },
+    "category_breakdown": [
+      {
+        "category": "Sequential",
+        "mean_entropy": 0.6859002113342285,
+        "allocated_k": 7,
+        "cosine_sim": 0.8400623202323914
+      },
+      {
+        "category": "Story Prose",
+        "mean_entropy": 1.7288224697113037,
+        "allocated_k": 5,
+        "cosine_sim": 0.840462863445282
+      },
+      {
+        "category": "Dialogue",
+        "mean_entropy": 2.1427927017211914,
+        "allocated_k": 5,
+        "cosine_sim": 0.8432043790817261
+      },
+      {
+        "category": "Knowledge",
+        "mean_entropy": 8.635974884033203,
+        "allocated_k": 1,
+        "cosine_sim": 0.8467108011245728
+      },
+      {
+        "category": "Technical",
+        "mean_entropy": 7.203444480895996,
+        "allocated_k": 1,
+        "cosine_sim": 0.8377976417541504
+      },
+      {
+        "category": "Python Code",
+        "mean_entropy": 6.355014801025391,
+        "allocated_k": 1,
+        "cosine_sim": 0.8415504693984985
+      },
+      {
+        "category": "Math Reasoning",
+        "mean_entropy": 4.733325004577637,
+        "allocated_k": 1,
+        "cosine_sim": 0.8408390879631042
+      }
+    ]
+  },
+  "INT8 (8-Bit Quantized)": {
+    "bits": 8,
+    "avg_k": 2.86,
+    "speedup": 2.2,
+    "dar_percent": 76.92,
+    "contradiction_rate_percent": 0.0,
+    "turboquant_cosine_sim": 0.8439,
+    "k_spectrum": {
+      "1": 200,
+      "2": 0,
+      "3": 0,
+      "4": 50,
+      "5": 50,
+      "6": 0,
+      "7": 50,
+      "8": 0
+    },
+    "category_breakdown": [
+      {
+        "category": "Sequential",
+        "mean_entropy": 0.6931471824645996,
+        "allocated_k": 7,
+        "cosine_sim": 0.8355258703231812
+      },
+      {
+        "category": "Story Prose",
+        "mean_entropy": 1.7917594909667969,
+        "allocated_k": 5,
+        "cosine_sim": 0.8505989909172058
+      },
+      {
+        "category": "Dialogue",
+        "mean_entropy": 2.1972246170043945,
+        "allocated_k": 4,
+        "cosine_sim": 0.842029869556427
+      },
+      {
+        "category": "Knowledge",
+        "mean_entropy": 8.639467239379883,
+        "allocated_k": 1,
+        "cosine_sim": 0.8398942947387695
+      },
+      {
+        "category": "Technical",
+        "mean_entropy": 7.200238227844238,
+        "allocated_k": 1,
+        "cosine_sim": 0.8488249778747559
+      },
+      {
+        "category": "Python Code",
+        "mean_entropy": 6.35909366607666,
+        "allocated_k": 1,
+        "cosine_sim": 0.8387829065322876
+      },
+      {
+        "category": "Math Reasoning",
+        "mean_entropy": 4.737614631652832,
+        "allocated_k": 1,
+        "cosine_sim": 0.8519101738929749
+      }
+    ]
+  },
+  "INT4 (4-Bit Quantized)": {
+    "bits": 4,
+    "avg_k": 2.86,
+    "speedup": 2.2,
+    "dar_percent": 76.92,
+    "contradiction_rate_percent": 0.0,
+    "turboquant_cosine_sim": 0.8423,
+    "k_spectrum": {
+      "1": 200,
+      "2": 0,
+      "3": 0,
+      "4": 50,
+      "5": 50,
+      "6": 0,
+      "7": 50,
+      "8": 0
+    },
+    "category_breakdown": [
+      {
+        "category": "Sequential",
+        "mean_entropy": 0.6931471824645996,
+        "allocated_k": 7,
+        "cosine_sim": 0.8347828984260559
+      },
+      {
+        "category": "Story Prose",
+        "mean_entropy": 1.7917594909667969,
+        "allocated_k": 5,
+        "cosine_sim": 0.8492524027824402
+      },
+      {
+        "category": "Dialogue",
+        "mean_entropy": 2.1972246170043945,
+        "allocated_k": 4,
+        "cosine_sim": 0.8374123573303223
+      },
+      {
+        "category": "Knowledge",
+        "mean_entropy": 8.622651100158691,
+        "allocated_k": 1,
+        "cosine_sim": 0.8366086483001709
+      },
+      {
+        "category": "Technical",
+        "mean_entropy": 7.047327518463135,
+        "allocated_k": 1,
+        "cosine_sim": 0.8521836400032043
+      },
+      {
+        "category": "Python Code",
+        "mean_entropy": 6.406939506530762,
+        "allocated_k": 1,
+        "cosine_sim": 0.838504433631897
+      },
+      {
+        "category": "Math Reasoning",
+        "mean_entropy": 4.906798362731934,
+        "allocated_k": 1,
+        "cosine_sim": 0.8475139141082764
+      }
+    ]
+  }
+}

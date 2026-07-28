@@ -1,0 +1,15 @@
+{
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "1d_linear_results": {
+    "throughput": 150.3,
+    "dar_percent": 70.6,
+    "speedup": 2.27,
+    "avg_accepted_tokens": 3.47
+  },
+  "2d_tree_results": {
+    "throughput": 205.7,
+    "dar_percent": 78.3,
+    "speedup": 3.01,
+    "avg_accepted_tokens": 5.07
+  }
+}

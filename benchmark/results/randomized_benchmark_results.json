@@ -1,0 +1,281 @@
+{
+  "timestamp": "2026-07-28 00:09:25",
+  "results": {
+    "ntp": [
+      {
+        "category": "Sequential Counting",
+        "prompt_snippet": "Months of the year: January, February, M...",
+        "tokens_per_sec": 111.71,
+        "mean_entropy": 4.13,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Formulaic Prose",
+        "prompt_snippet": "Deep inside the mystical forest of Zando...",
+        "tokens_per_sec": 116.8,
+        "mean_entropy": 4.13,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Conversational Dialogue",
+        "prompt_snippet": "Customer: Hello, I would like to inquire...",
+        "tokens_per_sec": 109.61,
+        "mean_entropy": 2.26,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Structured Prose",
+        "prompt_snippet": "The expansion of renewable energy infras...",
+        "tokens_per_sec": 93.53,
+        "mean_entropy": 4.13,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Technical Knowledge",
+        "prompt_snippet": "Quantization reduces the memory footprin...",
+        "tokens_per_sec": 96.66,
+        "mean_entropy": 4.13,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Computer Science Code",
+        "prompt_snippet": "def merge_sort(arr):\n    # Sort array in...",
+        "tokens_per_sec": 37.76,
+        "mean_entropy": 5.56,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Math & Symbol Reasoning",
+        "prompt_snippet": "Evaluate integral: The derivative of f(x...",
+        "tokens_per_sec": 163.92,
+        "mean_entropy": 10.66,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Financial Analysis",
+        "prompt_snippet": "Quarterly earnings for Apex Tech increas...",
+        "tokens_per_sec": 35.99,
+        "mean_entropy": 4.13,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Scientific Hypothesis",
+        "prompt_snippet": "The second law of thermodynamics states ...",
+        "tokens_per_sec": 48.97,
+        "mean_entropy": 4.13,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Philosophical Reasoning",
+        "prompt_snippet": "Descartes' famous proposition 'Cogito, e...",
+        "tokens_per_sec": 37.5,
+        "mean_entropy": 4.13,
+        "allocated_k": 1,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      }
+    ],
+    "static_mtp": [
+      {
+        "category": "Sequential Counting",
+        "prompt_snippet": "Months of the year: January, February, M...",
+        "tokens_per_sec": 427.84,
+        "mean_entropy": 4.13,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Formulaic Prose",
+        "prompt_snippet": "Deep inside the mystical forest of Zando...",
+        "tokens_per_sec": 404.45,
+        "mean_entropy": 4.13,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Conversational Dialogue",
+        "prompt_snippet": "Customer: Hello, I would like to inquire...",
+        "tokens_per_sec": 376.24,
+        "mean_entropy": 2.26,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Structured Prose",
+        "prompt_snippet": "The expansion of renewable energy infras...",
+        "tokens_per_sec": 315.37,
+        "mean_entropy": 4.13,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Technical Knowledge",
+        "prompt_snippet": "Quantization reduces the memory footprin...",
+        "tokens_per_sec": 289.24,
+        "mean_entropy": 4.13,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Computer Science Code",
+        "prompt_snippet": "def merge_sort(arr):\n    # Sort array in...",
+        "tokens_per_sec": 152.09,
+        "mean_entropy": 5.56,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Math & Symbol Reasoning",
+        "prompt_snippet": "Evaluate integral: The derivative of f(x...",
+        "tokens_per_sec": 591.6,
+        "mean_entropy": 10.65,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Financial Analysis",
+        "prompt_snippet": "Quarterly earnings for Apex Tech increas...",
+        "tokens_per_sec": 134.12,
+        "mean_entropy": 4.13,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Scientific Hypothesis",
+        "prompt_snippet": "The second law of thermodynamics states ...",
+        "tokens_per_sec": 178.74,
+        "mean_entropy": 4.13,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Philosophical Reasoning",
+        "prompt_snippet": "Descartes' famous proposition 'Cogito, e...",
+        "tokens_per_sec": 116.82,
+        "mean_entropy": 4.13,
+        "allocated_k": 4,
+        "dar_percent": "N/A",
+        "contradiction_rate": 0.0
+      }
+    ],
+    "elastic": [
+      {
+        "category": "Sequential Counting",
+        "prompt_snippet": "Months of the year: January, February, M...",
+        "tokens_per_sec": 239.35,
+        "mean_entropy": 4.13,
+        "allocated_k": 2,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Formulaic Prose",
+        "prompt_snippet": "Deep inside the mystical forest of Zando...",
+        "tokens_per_sec": 203.82,
+        "mean_entropy": 4.13,
+        "allocated_k": 2,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Conversational Dialogue",
+        "prompt_snippet": "Customer: Hello, I would like to inquire...",
+        "tokens_per_sec": 358.6,
+        "mean_entropy": 2.26,
+        "allocated_k": 4,
+        "dar_percent": 50.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Structured Prose",
+        "prompt_snippet": "The expansion of renewable energy infras...",
+        "tokens_per_sec": 183.89,
+        "mean_entropy": 4.13,
+        "allocated_k": 2,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Technical Knowledge",
+        "prompt_snippet": "Quantization reduces the memory footprin...",
+        "tokens_per_sec": 193.12,
+        "mean_entropy": 4.13,
+        "allocated_k": 2,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Computer Science Code",
+        "prompt_snippet": "def merge_sort(arr):\n    # Sort array in...",
+        "tokens_per_sec": 39.16,
+        "mean_entropy": 5.56,
+        "allocated_k": 1,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Math & Symbol Reasoning",
+        "prompt_snippet": "Evaluate integral: The derivative of f(x...",
+        "tokens_per_sec": 174.88,
+        "mean_entropy": 10.66,
+        "allocated_k": 1,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Financial Analysis",
+        "prompt_snippet": "Quarterly earnings for Apex Tech increas...",
+        "tokens_per_sec": 75.92,
+        "mean_entropy": 4.13,
+        "allocated_k": 2,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Scientific Hypothesis",
+        "prompt_snippet": "The second law of thermodynamics states ...",
+        "tokens_per_sec": 96.36,
+        "mean_entropy": 4.13,
+        "allocated_k": 2,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      },
+      {
+        "category": "Philosophical Reasoning",
+        "prompt_snippet": "Descartes' famous proposition 'Cogito, e...",
+        "tokens_per_sec": 54.86,
+        "mean_entropy": 4.13,
+        "allocated_k": 2,
+        "dar_percent": 0.0,
+        "contradiction_rate": 0.0
+      }
+    ]
+  }
+}

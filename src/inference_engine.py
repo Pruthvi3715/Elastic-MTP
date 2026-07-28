@@ -83,12 +83,16 @@ class ElasticMTPInferenceEngine:
                  model_name: str = ElasticMTPConfig.DEFAULT_MODEL_NAME,
                  device: str = ElasticMTPConfig.DEVICE,
                  load_in_8bit: bool = False,
-                 load_in_4bit: bool = False):
+                 load_in_4bit: bool = False,
+                 adapter_stack: Optional[Any] = None,
+                 auto_research: Optional[Any] = None):
         self.device = device
         self.model_name = model_name
         self.router = ElasticHorizonRouter()
         self.fused_router = FusedEntropyRouter().to(device)
         self.kv_cache = SpeculativeKVCache(num_layers=12, num_heads=4, head_dim=32, device=device)
+        self.adapter_stack = adapter_stack
+        self.auto_research = auto_research
         
         print(f"[ElasticMTP Engine] Initializing engine for '{model_name}' on {device}...")
         if model_name == "synthetic":
@@ -255,6 +259,15 @@ class ElasticMTPInferenceEngine:
                 else:  # low predictability - router should have chosen k=1 anyway
                     num_accepted = 0
                 self.router.record_draft_acceptance(num_accepted, num_proposed)
+
+                # Failure Mining: Trap rejected draft tokens for AutoResearch self-tuning
+                if self.auto_research is not None and num_accepted < num_proposed:
+                    target_token_id = torch.argmax(next_token_logits, dim=-1).item()
+                    self.auto_research.capture_rejection(
+                        prompt_ids=curr_input_ids[0],
+                        rejected_offset=num_accepted + 1,
+                        target_token_id=target_token_id
+                    )
             
             for offset in range(tokens_to_add):
                 next_token_id = torch.argmax(next_token_logits, dim=-1, keepdim=True)
@@ -303,3 +316,14 @@ class ElasticMTPInferenceEngine:
             "telemetry": telemetry,
             "router_metrics": router_metrics
         }
+
+    def generate_telemetry(self, prompt: str, max_new_tokens: int = 50) -> Dict[str, Any]:
+        """Runs speculative inference and returns draft acceptance telemetry stats."""
+        res = self.generate(prompt, max_new_tokens=max_new_tokens, mode="elastic")
+        rm = res.get("router_metrics", {})
+        return {
+            "drafted_tokens": rm.get("total_drafted", 0),
+            "accepted_tokens": rm.get("total_accepted", 0),
+            "acceptance_rate": rm.get("acceptance_rate", 0.0)
+        }
+

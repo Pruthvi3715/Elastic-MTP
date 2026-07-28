@@ -4,35 +4,35 @@
   "results": {
     "base_ntp": {
       "mode": "base",
-      "throughput": 36.1,
+      "throughput": 85.1,
       "dar_percent": 0.0,
       "speedup": 1.0,
       "total_tokens": 600
     },
     "static_mtp": {
       "mode": "static",
-      "throughput": 45.4,
+      "throughput": 105.4,
       "dar_percent": 33.3,
       "speedup": 1.55,
       "total_tokens": 600
     },
     "elastic_1d": {
       "mode": "elastic_1d",
-      "throughput": 39.9,
+      "throughput": 42.0,
       "dar_percent": 76.9,
       "speedup": 2.58,
       "total_tokens": 243
     },
     "elastic_2d_tree": {
       "mode": "elastic_2d",
-      "throughput": 49.3,
+      "throughput": 48.6,
       "dar_percent": 78.8,
       "speedup": 3.42,
       "total_tokens": 309
     },
     "elastic_vllm_cuda": {
       "mode": "elastic_vllm",
-      "throughput": 200.8,
+      "throughput": 202.2,
       "dar_percent": 95.0,
       "speedup": 4.85,
       "total_tokens": 1200

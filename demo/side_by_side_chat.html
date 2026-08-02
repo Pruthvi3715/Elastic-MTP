@@ -34,7 +34,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         header h1 {
@@ -55,7 +55,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
@@ -92,6 +92,18 @@
             background: linear-gradient(135deg, #0284c7, #0369a1);
             color: white;
             border-color: var(--accent-blue);
+        }
+
+        .hardware-banner {
+            display: none;
+            background: #451a03;
+            color: #fdba74;
+            border: 1px solid #7c2d12;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            font-weight: 500;
         }
 
         .prompt-box {
@@ -282,10 +294,13 @@
         <div class="controls-header">
             <span style="font-size:0.9rem; color:var(--text-muted);">Execution Settings</span>
             <div class="device-toggle-container">
-                <span style="font-size:0.85rem; font-weight:600;">Execution Hardware:</span>
+                <span style="font-size:0.85rem; font-weight:600;">Hardware Mode:</span>
                 <button class="toggle-btn active" id="toggle-cpu" onclick="selectDevice('cpu')">CPU Mode</button>
                 <button class="toggle-btn" id="toggle-gpu" onclick="selectDevice('gpu')">GPU (CUDA) Mode</button>
             </div>
+        </div>
+        <div class="hardware-banner" id="hardware-banner">
+            ⚠️ Note: No CUDA GPU drivers detected in local PyTorch environment. Running PyTorch multi-threaded CPU backend.
         </div>
         <div class="prompt-box">
             <input type="text" id="prompt-input" value="what is name of first president" placeholder="Type your prompt here...">
@@ -340,7 +355,7 @@
                     Model B: Elastic-MTP (Ours)
                     <span class="tag tag-mtp">Qwen2.5-1.5B MTP</span>
                 </div>
-                <div class="speedup-badge" id="speedup-badge">LIVE PYTORCH</div>
+                <div class="speedup-badge" id="speedup-badge">CPU RUNTIME</div>
             </div>
             <div class="metrics-bar">
                 <div class="metric-item">
@@ -380,6 +395,8 @@
             document.getElementById('toggle-cpu').classList.toggle('active', dev === 'cpu');
             document.getElementById('toggle-gpu').classList.toggle('active', dev === 'gpu');
 
+            const banner = document.getElementById('hardware-banner');
+
             try {
                 const res = await fetch('/api/set_device', {
                     method: 'POST',
@@ -387,7 +404,12 @@
                     body: JSON.stringify({ device: dev })
                 });
                 const data = await res.json();
-                console.log("Device switch:", data);
+                
+                if (dev === 'gpu' && !data.cuda_available) {
+                    banner.style.display = 'block';
+                } else {
+                    banner.style.display = 'none';
+                }
             } catch(e) {
                 console.log("Device toggle error:", e);
             }
@@ -418,13 +440,15 @@
 
                 const data = await response.json();
 
+                const devUsed = data.device_used ? data.device_used : currentDevice.toUpperCase();
+
                 // Model A (Raw Base Model) Data
                 rawOut.innerText = data.model_a.text;
                 document.getElementById('raw-tps').innerText = data.model_a.throughput_tps + ' t/s';
                 document.getElementById('raw-lat').innerText = data.model_a.latency_ms + ' ms';
                 document.getElementById('raw-tokens').innerText = data.model_a.tokens;
                 document.getElementById('raw-time').innerText = data.model_a.time_s + ' s';
-                document.getElementById('raw-status').innerText = 'Status: ✅ PyTorch Completed (' + data.device_used + ')';
+                document.getElementById('raw-status').innerText = 'Status: ✅ PyTorch Completed (' + devUsed + ')';
 
                 // Model B (Elastic-MTP) Data
                 mtpOut.innerText = data.model_b.text;
@@ -432,9 +456,10 @@
                 document.getElementById('mtp-lat').innerText = data.model_b.latency_ms + ' ms';
                 document.getElementById('mtp-tokens').innerText = data.model_b.tokens;
                 document.getElementById('mtp-time').innerText = data.model_b.time_s + ' s';
-                document.getElementById('mtp-status').innerText = 'Status: ✅ PyTorch Completed (' + data.device_used + ')';
+                document.getElementById('mtp-status').innerText = 'Status: ✅ PyTorch Completed (' + devUsed + ')';
 
-                document.getElementById('speedup-badge').innerText = (data.device_used || currentDevice.toUpperCase()) + ' MODE';
+                const speedupStr = data.model_b.speedup ? data.model_b.speedup + 'x SPEEDUP' : devUsed + ' RUNTIME';
+                document.getElementById('speedup-badge').innerText = speedupStr;
 
             } catch (err) {
                 rawOut.innerText = 'Error executing PyTorch model: ' + err;

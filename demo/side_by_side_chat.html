@@ -434,7 +434,7 @@
                 document.getElementById('mtp-time').innerText = data.model_b.time_s + ' s';
                 document.getElementById('mtp-status').innerText = 'Status: ✅ PyTorch Completed (' + data.device_used + ')';
 
-                document.getElementById('speedup-badge').innerText = data.device_used + ' RUNTIME';
+                document.getElementById('speedup-badge').innerText = (data.device_used || currentDevice.toUpperCase()) + ' MODE';
 
             } catch (err) {
                 rawOut.innerText = 'Error executing PyTorch model: ' + err;

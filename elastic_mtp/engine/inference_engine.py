@@ -11,6 +11,7 @@ from elastic_mtp.config import ElasticMTPConfig
 from elastic_mtp.routers.elastic_horizon_router import DynamicHorizonRouter, ElasticHorizonRouter
 from elastic_mtp.routers.fused_entropy_router import FusedEntropyRouter
 from elastic_mtp.engine.kv_cache_manager import SpeculativeKVCache
+from elastic_mtp.adapters.glora import MTPGLoRAHead
 
 class SyntheticLM(torch.nn.Module):
     def __init__(self, vocab_size=50257):
@@ -71,6 +72,7 @@ class ElasticMTPInferenceEngine:
             print("[ElasticMTP Engine] Using instant offline PyTorch model engine.")
             self.tokenizer = None
             self.model = SyntheticLM().to(device)
+            self.mtp_head = MTPGLoRAHead(hidden_dim=128, vocab_size=50257, rank=16, num_aux_heads=4).to(device)
         else:
             try:
                 self.tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
@@ -81,11 +83,19 @@ class ElasticMTPInferenceEngine:
                 self.model = AutoModelForCausalLM.from_pretrained(model_name, dtype=torch_dtype, trust_remote_code=True)
                 self.model = self.model.to(device)
                 self.model.eval()
+
+                hidden_dim = self.model.config.hidden_size
+                vocab_size = self.model.config.vocab_size
+                self.mtp_head = MTPGLoRAHead(hidden_dim=hidden_dim, vocab_size=vocab_size, rank=32, num_aux_heads=4).to(device)
+                if device == "cuda":
+                    self.mtp_head = self.mtp_head.half()
+                self.mtp_head.eval()
             except Exception as e:
                 print(f"[ElasticMTP Engine Warning] Real model load failed ({e}). Falling back to synthetic model.")
                 self.model_name = "synthetic"
                 self.tokenizer = None
                 self.model = SyntheticLM().to(device)
+                self.mtp_head = MTPGLoRAHead(hidden_dim=128, vocab_size=50257, rank=16, num_aux_heads=4).to(device)
 
     def generate(self, prompt: str, max_new_tokens: int = 50, mode: str = "elastic", confidence_boost: float = None, fixed_k: int = 4) -> Dict[str, Any]:
         start_time = time.perf_counter()
@@ -110,11 +120,16 @@ class ElasticMTPInferenceEngine:
             while tokens_generated < max_new_tokens:
                 if self.model_name == "synthetic":
                     outputs = self.model(generated_ids, is_predictable_prompt=is_predictable, confidence_boost=confidence_boost)
+                    next_token_logits = outputs.logits[:, -1, :]
+                    aux_logits = [next_token_logits for _ in range(4)]
                 else:
-                    outputs = self.model(generated_ids)
+                    outputs = self.model(generated_ids, output_hidden_states=True)
+                    next_token_logits = outputs.logits[:, -1, :]
                     
-                next_token_logits = outputs.logits[:, -1, :]
-                
+                    last_hidden = outputs.hidden_states[-1][:, -1:, :]
+                    mid_hidden = outputs.hidden_states[len(outputs.hidden_states) // 2][:, -1:, :]
+                    aux_logits = self.mtp_head(last_hidden, mid_hidden)
+
                 if mode == "ntp":
                     allocated_k = 1
                     meta = {"entropy": 0.5, "reason": "NTP_BASELINE"}
@@ -130,40 +145,48 @@ class ElasticMTPInferenceEngine:
                 entropy_history.append(meta.get("entropy", 0.0))
                 meta_history.append(meta)
 
-                if allocated_k == 1:
-                    next_token = torch.argmax(next_token_logits, dim=-1, keepdim=True)
-                    token_id_history.append(int(next_token[0, 0].item()))
-                    generated_ids = torch.cat([generated_ids, next_token], dim=-1)
-                    tokens_generated += 1
-                else:
+                # 1. Base Model Primary Next Token (Golden Truth)
+                primary_token = torch.argmax(next_token_logits, dim=-1, keepdim=True)
+                token_id_history.append(int(primary_token[0, 0].item()))
+                generated_ids = torch.cat([generated_ids, primary_token], dim=-1)
+                tokens_generated += 1
+                if tokens_generated >= max_new_tokens:
+                    break
+
+                # 2. Speculative Tree Verification
+                if allocated_k > 1:
                     num_drafts = min(allocated_k - 1, max_new_tokens - tokens_generated)
                     if num_drafts <= 0:
-                        next_token = torch.argmax(next_token_logits, dim=-1, keepdim=True)
-                        token_id_history.append(int(next_token[0, 0].item()))
-                        generated_ids = torch.cat([generated_ids, next_token], dim=-1)
-                        tokens_generated += 1
                         break
                         
                     total_proposed_draft_tokens += num_drafts
                     
+                    # Extract draft tokens proposed by auxiliary heads
                     draft_tokens = []
-                    curr_logits = next_token_logits
-                    for _ in range(num_drafts):
-                        d_tok = torch.argmax(curr_logits, dim=-1, keepdim=True)
+                    for i in range(num_drafts):
+                        head_idx = min(i, len(aux_logits) - 1)
+                        head_logits = aux_logits[head_idx]
+                        if head_logits.dim() == 3:
+                            head_logits = head_logits[:, -1, :]
+                        d_tok = torch.argmax(head_logits, dim=-1, keepdim=True)
                         draft_tokens.append(d_tok)
-                        if self.model_name == "synthetic":
-                            temp_ids = torch.cat([generated_ids] + draft_tokens, dim=-1)
-                            curr_outputs = self.model(temp_ids, is_predictable_prompt=is_predictable, confidence_boost=confidence_boost)
-                            curr_logits = curr_outputs.logits[:, -1, :]
-                        else:
-                            curr_logits = curr_logits + torch.randn_like(curr_logits) * 0.01
+
+                    # Parallel Verification Pass: Verify draft tokens with base model
+                    draft_concat = torch.cat(draft_tokens, dim=-1)
+                    candidate_ids = torch.cat([generated_ids, draft_concat], dim=-1)
+                    
+                    if self.model_name == "synthetic":
+                        verify_out = self.model(candidate_ids, is_predictable_prompt=is_predictable, confidence_boost=confidence_boost)
+                    else:
+                        verify_out = self.model(candidate_ids)
+                        
+                    verify_logits = verify_out.logits[:, generated_ids.shape[1]-1:-1, :]
+                    target_tokens = torch.argmax(verify_logits, dim=-1)
 
                     accepted_count = 0
-                    for d_tok in draft_tokens:
-                        p_target = F.softmax(next_token_logits, dim=-1)
-                        prob_accepted = float(p_target[0, d_tok[0].item()].item())
-                        
-                        if is_predictable or prob_accepted > 0.10:
+                    for idx, d_tok in enumerate(draft_tokens):
+                        target_tok = target_tokens[:, idx:idx+1]
+                        if d_tok.item() == target_tok.item():
                             accepted_count += 1
                             token_id_history.append(int(d_tok[0, 0].item()))
                             generated_ids = torch.cat([generated_ids, d_tok], dim=-1)
@@ -171,16 +194,14 @@ class ElasticMTPInferenceEngine:
                             if tokens_generated >= max_new_tokens:
                                 break
                         else:
+                            # Rejection: Fallback to target model token and break
+                            token_id_history.append(int(target_tok[0, 0].item()))
+                            generated_ids = torch.cat([generated_ids, target_tok], dim=-1)
+                            tokens_generated += 1
                             break
 
                     accepted_draft_tokens += accepted_count
                     self.router.record_draft_acceptance(accepted_count, num_drafts)
-                    
-                    if accepted_count < num_drafts and tokens_generated < max_new_tokens:
-                        fallback_tok = torch.argmax(next_token_logits, dim=-1, keepdim=True)
-                        token_id_history.append(int(fallback_tok[0, 0].item()))
-                        generated_ids = torch.cat([generated_ids, fallback_tok], dim=-1)
-                        tokens_generated += 1
 
         elapsed = time.perf_counter() - start_time
         tps = tokens_generated / elapsed if elapsed > 0 else 0.0

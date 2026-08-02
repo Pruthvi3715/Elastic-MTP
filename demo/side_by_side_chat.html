@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elastic-MTP vs Raw Base Model: Side-by-Side Interactive Arena</title>
+    <title>Elastic-MTP vs Raw Base Model: Live Real PyTorch Arena</title>
     <style>
         :root {
             --bg-dark: #0f172a;
@@ -233,80 +233,60 @@
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.9rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
-            background: var(--accent-blue);
-            margin-left: 2px;
-            animation: blink 0.8s infinite;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Elastic-MTP Side-by-Side Model Arena</h1>
-        <p>Prompt standard <b>Raw Base Model (NTP)</b> and <b>Elastic-MTP (Bonsai 1-Bit + 2D Tree)</b> simultaneously</p>
+        <h1>Real PyTorch Side-by-Side Model Arena</h1>
+        <p>Real-time PyTorch Execution on <b>Qwen2.5-1.5B-Instruct</b> (No mock data)</p>
     </header>
 
     <div class="prompt-container">
         <div class="prompt-box">
-            <input type="text" id="prompt-input" value="Write a Python function to check if a number is prime, and explain how it works." placeholder="Type your prompt here...">
-            <button id="generate-btn" onclick="startGeneration()">Prompt Both Models</button>
+            <input type="text" id="prompt-input" value="what is name of first president" placeholder="Type your prompt here...">
+            <button id="generate-btn" onclick="startRealGeneration()">Run PyTorch Generation</button>
         </div>
         <div class="preset-prompts">
-            <button class="preset-btn" onclick="setPrompt('Explain quantum computing in simple terms for a 10-year old.')">Quantum Computing</button>
-            <button class="preset-btn" onclick="setPrompt('Write a Python function to check if a number is prime, and explain how it works.')">Prime Check Code</button>
-            <button class="preset-btn" onclick="setPrompt('List 5 key benefits of multi-token prediction in LLM speculative decoding.')">MTP Benefits</button>
-            <button class="preset-btn" onclick="setPrompt('Write a SQL query to find top 5 highest spending customers.')">SQL Query</button>
+            <button class="preset-btn" onclick="setPrompt('what is name of first president')">First President</button>
+            <button class="preset-btn" onclick="setPrompt('What is capital of France?')">Capital of France</button>
+            <button class="preset-btn" onclick="setPrompt('Write a short Python function for factorial.')">Python Factorial</button>
+            <button class="preset-btn" onclick="setPrompt('Explain quantum physics in one sentence.')">Quantum Physics</button>
         </div>
     </div>
 
     <div class="arena-grid">
-        <!-- Model A: Raw Model -->
+        <!-- Model A: Raw Base Model -->
         <div class="model-card raw-card">
             <div class="card-header">
                 <div class="card-title">
                     Model A: Raw Baseline
-                    <span class="tag tag-raw">FP16 NTP</span>
+                    <span class="tag tag-raw">Qwen2.5-1.5B Raw</span>
                 </div>
             </div>
             <div class="metrics-bar">
                 <div class="metric-item">
                     <span class="metric-label">Throughput</span>
-                    <span class="metric-val" id="raw-tps">36.1 t/s</span>
+                    <span class="metric-val" id="raw-tps">-- t/s</span>
                 </div>
                 <div class="metric-item">
                     <span class="metric-label">Token Latency</span>
-                    <span class="metric-val" id="raw-lat">27.7 ms</span>
+                    <span class="metric-val" id="raw-lat">-- ms</span>
                 </div>
                 <div class="metric-item">
-                    <span class="metric-label">VRAM Footprint</span>
-                    <span class="metric-val">3072 MB</span>
+                    <span class="metric-label">Generated Tokens</span>
+                    <span class="metric-val" id="raw-tokens">--</span>
                 </div>
                 <div class="metric-item">
-                    <span class="metric-label">Elapsed Time</span>
-                    <span class="metric-val" id="raw-time">0.00s</span>
+                    <span class="metric-label">PyTorch Time</span>
+                    <span class="metric-val" id="raw-time">-- s</span>
                 </div>
             </div>
-            <div class="output-box" id="raw-output">Click "Prompt Both Models" to start side-by-side generation...</div>
+            <div class="output-box" id="raw-output">Type a prompt and click "Run PyTorch Generation"...</div>
             <div class="status-footer">
-                <span id="raw-status">Status: Idle</span>
-                <span>Strategy: 1-by-1 Next-Token Prediction</span>
+                <span id="raw-status">Status: Ready</span>
+                <span>Strategy: Autoregressive Greedy Search</span>
             </div>
         </div>
 
@@ -315,116 +295,91 @@
             <div class="card-header">
                 <div class="card-title">
                     Model B: Elastic-MTP (Ours)
-                    <span class="tag tag-mtp">Bonsai 1-Bit + 2D Tree</span>
+                    <span class="tag tag-mtp">Qwen2.5-1.5B MTP</span>
                 </div>
-                <div class="speedup-badge">16.22x SPEEDUP</div>
+                <div class="speedup-badge" id="speedup-badge">LIVE PYTORCH</div>
             </div>
             <div class="metrics-bar">
                 <div class="metric-item">
                     <span class="metric-label">Throughput</span>
-                    <span class="metric-val" id="mtp-tps" style="color:#22c55e;">585.4 t/s</span>
+                    <span class="metric-val" id="mtp-tps" style="color:#22c55e;">-- t/s</span>
                 </div>
                 <div class="metric-item">
                     <span class="metric-label">Token Latency</span>
-                    <span class="metric-val" id="mtp-lat" style="color:#38bdf8;">1.71 ms</span>
+                    <span class="metric-val" id="mtp-lat" style="color:#38bdf8;">-- ms</span>
                 </div>
                 <div class="metric-item">
-                    <span class="metric-label">VRAM Saved</span>
-                    <span class="metric-val" style="color:#a855f7;">93.7% (193 MB)</span>
+                    <span class="metric-label">Generated Tokens</span>
+                    <span class="metric-val" id="mtp-tokens">--</span>
                 </div>
                 <div class="metric-item">
-                    <span class="metric-label">Elapsed Time</span>
-                    <span class="metric-val" id="mtp-time">0.00s</span>
+                    <span class="metric-label">PyTorch Time</span>
+                    <span class="metric-val" id="mtp-time">-- s</span>
                 </div>
             </div>
-            <div class="output-box" id="mtp-output">Click "Prompt Both Models" to start side-by-side generation...</div>
+            <div class="output-box" id="mtp-output">Type a prompt and click "Run PyTorch Generation"...</div>
             <div class="status-footer">
-                <span id="mtp-status">Status: Idle</span>
-                <span>Strategy: Dynamic 2D Tree Speculation (DAR: 95.8%)</span>
+                <span id="mtp-status">Status: Ready</span>
+                <span>Strategy: MTP Draft Head + Tree Router</span>
             </div>
         </div>
     </div>
 
     <script>
-        const sampleResponse = `Here is a clean Python function to check if a number is prime:
-
-def is_prime(n: int) -> bool:
-    if n <= 1:
-        return False
-    if n <= 3:
-        return True
-    if n % 2 == 0 or n % 3 == 0:
-        return False
-    i = 5
-    while i * i <= n:
-        if n % i == 0 or n % (i + 2) == 0:
-            return False
-        i += 6
-    return True
-
-# Explanation:
-1. Numbers <= 1 are not prime.
-2. 2 and 3 are prime numbers.
-3. We test factors up to sqrt(n) using 6k ± 1 optimization for ultra-fast checks.`;
-
         function setPrompt(txt) {
             document.getElementById('prompt-input').value = txt;
         }
 
-        let rawInterval, mtpInterval;
+        async function startRealGeneration() {
+            const promptText = document.getElementById('prompt-input').value.trim();
+            if (!promptText) return;
 
-        function startGeneration() {
             const btn = document.getElementById('generate-btn');
             btn.disabled = true;
+            btn.innerText = "Executing PyTorch Model...";
 
             const rawOut = document.getElementById('raw-output');
             const mtpOut = document.getElementById('mtp-output');
-            rawOut.innerHTML = '';
-            mtpOut.innerHTML = '';
+            rawOut.innerText = "⏳ Running PyTorch forward pass for Model A...";
+            mtpOut.innerText = "⏳ Running PyTorch forward pass for Model B...";
 
-            document.getElementById('raw-status').innerText = 'Status: Streaming (1 token / 27.7ms)...';
-            document.getElementById('mtp-status').innerText = 'Status: Streaming Speculative Tree (8 tokens / 1.7ms)...';
+            document.getElementById('raw-status').innerText = 'Status: Computing...';
+            document.getElementById('mtp-status').innerText = 'Status: Computing...';
 
-            const tokens = sampleResponse.split(' ');
-            let rawIdx = 0;
-            let mtpIdx = 0;
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: promptText, max_tokens: 35 })
+                });
 
-            const startTime = Date.now();
+                const data = await response.json();
 
-            // Model B (Elastic-MTP): 16x faster streaming
-            clearInterval(mtpInterval);
-            mtpInterval = setInterval(() => {
-                if (mtpIdx < tokens.length) {
-                    // Stream 3-5 tokens at once (MTP speculation burst)
-                    let chunk = tokens.slice(mtpIdx, mtpIdx + 4).join(' ') + ' ';
-                    mtpOut.innerHTML += chunk;
-                    mtpIdx += 4;
-                    mtpOut.scrollTop = mtpOut.scrollHeight;
+                // Model A (Raw Base Model) Data
+                rawOut.innerText = data.model_a.text;
+                document.getElementById('raw-tps').innerText = data.model_a.throughput_tps + ' t/s';
+                document.getElementById('raw-lat').innerText = data.model_a.latency_ms + ' ms';
+                document.getElementById('raw-tokens').innerText = data.model_a.tokens;
+                document.getElementById('raw-time').innerText = data.model_a.time_s + ' s';
+                document.getElementById('raw-status').innerText = 'Status: ✅ PyTorch Completed';
 
-                    let elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-                    document.getElementById('mtp-time').innerText = elapsed + 's';
-                } else {
-                    clearInterval(mtpInterval);
-                    document.getElementById('mtp-status').innerText = 'Status: ✅ Completed in ' + ((Date.now() - startTime) / 1000).toFixed(2) + 's!';
-                }
-            }, 30); // Ultra fast stream
+                // Model B (Elastic-MTP) Data
+                mtpOut.innerText = data.model_b.text;
+                document.getElementById('mtp-tps').innerText = data.model_b.throughput_tps + ' t/s';
+                document.getElementById('mtp-lat').innerText = data.model_b.latency_ms + ' ms';
+                document.getElementById('mtp-tokens').innerText = data.model_b.tokens;
+                document.getElementById('mtp-time').innerText = data.model_b.time_s + ' s';
+                document.getElementById('mtp-status').innerText = 'Status: ✅ PyTorch Completed';
 
-            // Model A (Raw Base Model): 16x slower streaming
-            clearInterval(rawInterval);
-            rawInterval = setInterval(() => {
-                if (rawIdx < tokens.length) {
-                    rawOut.innerHTML += tokens[rawIdx] + ' ';
-                    rawIdx++;
-                    rawOut.scrollTop = rawOut.scrollHeight;
+                document.getElementById('speedup-badge').innerText = 'REAL PYTORCH GENERATION';
 
-                    let elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-                    document.getElementById('raw-time').innerText = elapsed + 's';
-                } else {
-                    clearInterval(rawInterval);
-                    document.getElementById('raw-status').innerText = 'Status: ✅ Completed in ' + ((Date.now() - startTime) / 1000).toFixed(2) + 's!';
-                    btn.disabled = false;
-                }
-            }, 180); // Slower stream
+            } catch (err) {
+                rawOut.innerText = 'Error executing PyTorch model: ' + err;
+                mtpOut.innerText = 'Error executing PyTorch model: ' + err;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Run PyTorch Generation";
+            }
         }
     </script>
 </body>

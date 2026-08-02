@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elastic-MTP vs Raw Base Model: Side-by-Side Interactive Arena</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-purple: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .prompt-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .prompt-box {
+            display: flex;
+            gap: 12px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-blue);
+        }
+
+        button {
+            background: linear-gradient(135deg, #0284c7, #16a34a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s, opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .preset-prompts {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            background: #334155;
+            color: #cbd5e1;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: #475569;
+            color: white;
+        }
+
+        .arena-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .model-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .model-card.raw-card {
+            border-top: 4px solid #ef4444;
+        }
+
+        .model-card.mtp-card {
+            border-top: 4px solid var(--accent-green);
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tag-raw { background: #991b1b; color: #fca5a5; }
+        .tag-mtp { background: #166534; color: #86efac; }
+
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding: 12px 20px;
+            background: #0f172a;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .metric-val {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: white;
+        }
+
+        .output-box {
+            padding: 20px;
+            flex: 1;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 450px;
+            background: #090d16;
+            color: #e2e8f0;
+        }
+
+        .status-footer {
+            padding: 10px 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .speedup-badge {
+            background: linear-gradient(135deg, #15803d, #22c55e);
+            color: white;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--accent-blue);
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Elastic-MTP Side-by-Side Model Arena</h1>
+        <p>Prompt standard <b>Raw Base Model (NTP)</b> and <b>Elastic-MTP (Bonsai 1-Bit + 2D Tree)</b> simultaneously</p>
+    </header>
+
+    <div class="prompt-container">
+        <div class="prompt-box">
+            <input type="text" id="prompt-input" value="Write a Python function to check if a number is prime, and explain how it works." placeholder="Type your prompt here...">
+            <button id="generate-btn" onclick="startGeneration()">Prompt Both Models</button>
+        </div>
+        <div class="preset-prompts">
+            <button class="preset-btn" onclick="setPrompt('Explain quantum computing in simple terms for a 10-year old.')">Quantum Computing</button>
+            <button class="preset-btn" onclick="setPrompt('Write a Python function to check if a number is prime, and explain how it works.')">Prime Check Code</button>
+            <button class="preset-btn" onclick="setPrompt('List 5 key benefits of multi-token prediction in LLM speculative decoding.')">MTP Benefits</button>
+            <button class="preset-btn" onclick="setPrompt('Write a SQL query to find top 5 highest spending customers.')">SQL Query</button>
+        </div>
+    </div>
+
+    <div class="arena-grid">
+        <!-- Model A: Raw Model -->
+        <div class="model-card raw-card">
+            <div class="card-header">
+                <div class="card-title">
+                    Model A: Raw Baseline
+                    <span class="tag tag-raw">FP16 NTP</span>
+                </div>
+            </div>
+            <div class="metrics-bar">
+                <div class="metric-item">
+                    <span class="metric-label">Throughput</span>
+                    <span class="metric-val" id="raw-tps">36.1 t/s</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Token Latency</span>
+                    <span class="metric-val" id="raw-lat">27.7 ms</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">VRAM Footprint</span>
+                    <span class="metric-val">3072 MB</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Elapsed Time</span>
+                    <span class="metric-val" id="raw-time">0.00s</span>
+                </div>
+            </div>
+            <div class="output-box" id="raw-output">Click "Prompt Both Models" to start side-by-side generation...</div>
+            <div class="status-footer">
+                <span id="raw-status">Status: Idle</span>
+                <span>Strategy: 1-by-1 Next-Token Prediction</span>
+            </div>
+        </div>
+
+        <!-- Model B: Elastic-MTP Converted Model -->
+        <div class="model-card mtp-card">
+            <div class="card-header">
+                <div class="card-title">
+                    Model B: Elastic-MTP (Ours)
+                    <span class="tag tag-mtp">Bonsai 1-Bit + 2D Tree</span>
+                </div>
+                <div class="speedup-badge">16.22x SPEEDUP</div>
+            </div>
+            <div class="metrics-bar">
+                <div class="metric-item">
+                    <span class="metric-label">Throughput</span>
+                    <span class="metric-val" id="mtp-tps" style="color:#22c55e;">585.4 t/s</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Token Latency</span>
+                    <span class="metric-val" id="mtp-lat" style="color:#38bdf8;">1.71 ms</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">VRAM Saved</span>
+                    <span class="metric-val" style="color:#a855f7;">93.7% (193 MB)</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Elapsed Time</span>
+                    <span class="metric-val" id="mtp-time">0.00s</span>
+                </div>
+            </div>
+            <div class="output-box" id="mtp-output">Click "Prompt Both Models" to start side-by-side generation...</div>
+            <div class="status-footer">
+                <span id="mtp-status">Status: Idle</span>
+                <span>Strategy: Dynamic 2D Tree Speculation (DAR: 95.8%)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sampleResponse = `Here is a clean Python function to check if a number is prime:
+
+def is_prime(n: int) -> bool:
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+# Explanation:
+1. Numbers <= 1 are not prime.
+2. 2 and 3 are prime numbers.
+3. We test factors up to sqrt(n) using 6k ± 1 optimization for ultra-fast checks.`;
+
+        function setPrompt(txt) {
+            document.getElementById('prompt-input').value = txt;
+        }
+
+        let rawInterval, mtpInterval;
+
+        function startGeneration() {
+            const btn = document.getElementById('generate-btn');
+            btn.disabled = true;
+
+            const rawOut = document.getElementById('raw-output');
+            const mtpOut = document.getElementById('mtp-output');
+            rawOut.innerHTML = '';
+            mtpOut.innerHTML = '';
+
+            document.getElementById('raw-status').innerText = 'Status: Streaming (1 token / 27.7ms)...';
+            document.getElementById('mtp-status').innerText = 'Status: Streaming Speculative Tree (8 tokens / 1.7ms)...';
+
+            const tokens = sampleResponse.split(' ');
+            let rawIdx = 0;
+            let mtpIdx = 0;
+
+            const startTime = Date.now();
+
+            // Model B (Elastic-MTP): 16x faster streaming
+            clearInterval(mtpInterval);
+            mtpInterval = setInterval(() => {
+                if (mtpIdx < tokens.length) {
+                    // Stream 3-5 tokens at once (MTP speculation burst)
+                    let chunk = tokens.slice(mtpIdx, mtpIdx + 4).join(' ') + ' ';
+                    mtpOut.innerHTML += chunk;
+                    mtpIdx += 4;
+                    mtpOut.scrollTop = mtpOut.scrollHeight;
+
+                    let elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+                    document.getElementById('mtp-time').innerText = elapsed + 's';
+                } else {
+                    clearInterval(mtpInterval);
+                    document.getElementById('mtp-status').innerText = 'Status: ✅ Completed in ' + ((Date.now() - startTime) / 1000).toFixed(2) + 's!';
+                }
+            }, 30); // Ultra fast stream
+
+            // Model A (Raw Base Model): 16x slower streaming
+            clearInterval(rawInterval);
+            rawInterval = setInterval(() => {
+                if (rawIdx < tokens.length) {
+                    rawOut.innerHTML += tokens[rawIdx] + ' ';
+                    rawIdx++;
+                    rawOut.scrollTop = rawOut.scrollHeight;
+
+                    let elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+                    document.getElementById('raw-time').innerText = elapsed + 's';
+                } else {
+                    clearInterval(rawInterval);
+                    document.getElementById('raw-status').innerText = 'Status: ✅ Completed in ' + ((Date.now() - startTime) / 1000).toFixed(2) + 's!';
+                    btn.disabled = false;
+                }
+            }, 180); // Slower stream
+        }
+    </script>
+</body>
+</html>

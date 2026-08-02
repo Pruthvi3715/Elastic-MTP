@@ -1,7 +1,6 @@
 """
-Real PyTorch Backend Web Server for Elastic-MTP Arena.
-Runs actual Qwen2.5-0.5B-Instruct model inference via PyTorch on user prompts.
-No mock text, no hardcoded responses.
+Real PyTorch Backend Web Server for Elastic-MTP Arena with Device Toggle (CPU / GPU CUDA).
+Runs actual Qwen2.5-1.5B-Instruct model inference via PyTorch on user prompts.
 """
 import os
 import sys
@@ -18,22 +17,33 @@ from elastic_mtp.routers.tree_elastic_router import DynamicTreeRouter
 
 MODEL_ID = "Qwen/Qwen2.5-1.5B-Instruct"
 
+# Detect hardware
+CUDA_AVAILABLE = torch.cuda.is_available()
+CURRENT_DEVICE = "cuda" if CUDA_AVAILABLE else "cpu"
+
 print("=" * 80)
-print("LOADING REAL PYTORCH MODEL BACKEND...")
+print(f"LOADING REAL PYTORCH MODEL BACKEND (DEFAULT DEVICE: {CURRENT_DEVICE.upper()})...")
 print("=" * 80)
 
 t0_load = time.perf_counter()
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(MODEL_ID, dtype=torch.float32, trust_remote_code=True)
+
+if CUDA_AVAILABLE:
+    model = model.to("cuda")
+
 model.eval()
 t1_load = time.perf_counter()
 
-print(f"[OK] Loaded '{MODEL_ID}' into PyTorch in {(t1_load - t0_load):.2f}s!")
+print(f"[OK] Loaded '{MODEL_ID}' on {CURRENT_DEVICE.upper()} in {(t1_load - t0_load):.2f}s!")
 
 # Initialize MTP Head & Router
 hidden_dim = model.config.hidden_size
 vocab_size = model.config.vocab_size
 mtp_head = MTPGLoRAHead(hidden_dim=hidden_dim, vocab_size=vocab_size, rank=32)
+if CUDA_AVAILABLE:
+    mtp_head = mtp_head.to("cuda")
+
 router_2d = DynamicTreeRouter(tau_high=4.0, tau_low=2.0)
 
 PORT = 8080
@@ -43,7 +53,54 @@ class RealArenaHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
+    def do_GET(self):
+        if self.path == "/api/device_status":
+            res_data = {
+                "cuda_available": CUDA_AVAILABLE,
+                "current_device": CURRENT_DEVICE,
+                "device_name": torch.cuda.get_device_name(0) if CUDA_AVAILABLE else "CPU Execution (PyTorch)"
+            }
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(res_data).encode('utf-8'))
+        else:
+            super().do_GET()
+
     def do_POST(self):
+        global CURRENT_DEVICE, model, mtp_head
+        
+        if self.path == "/api/set_device":
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            req = json.loads(post_data.decode('utf-8'))
+            target_device = req.get("device", "cpu").lower()
+
+            if target_device == "gpu" or target_device == "cuda":
+                if CUDA_AVAILABLE:
+                    CURRENT_DEVICE = "cuda"
+                    model = model.to("cuda")
+                    mtp_head = mtp_head.to("cuda")
+                    msg = "Switched model to GPU (CUDA)"
+                else:
+                    msg = "CUDA hardware unavailable in environment. Remaining on CPU."
+            else:
+                CURRENT_DEVICE = "cpu"
+                model = model.to("cpu")
+                mtp_head = mtp_head.to("cpu")
+                msg = "Switched model to CPU"
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({
+                "status": "success",
+                "message": msg,
+                "current_device": CURRENT_DEVICE,
+                "cuda_available": CUDA_AVAILABLE
+            }).encode('utf-8'))
+            return
+
         if self.path == "/api/generate":
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
@@ -51,13 +108,16 @@ class RealArenaHandler(SimpleHTTPRequestHandler):
             
             prompt = req.get("prompt", "What is the name of the first president?")
             max_new_tokens = int(req.get("max_tokens", 35))
+            requested_device = req.get("device", CURRENT_DEVICE).lower()
 
-            print(f"\n[API Request] Received Prompt: '{prompt}'")
+            device_str = "cuda" if (requested_device in ["gpu", "cuda"] and CUDA_AVAILABLE) else "cpu"
+
+            print(f"\n[API Request] Prompt: '{prompt}' | Device: {device_str.upper()}")
             
-            # Tokenize prompt
+            # Tokenize prompt & move to device
             inputs = tokenizer(prompt, return_tensors="pt")
-            input_ids = inputs["input_ids"]
-            attention_mask = inputs.get("attention_mask", torch.ones_like(input_ids))
+            input_ids = inputs["input_ids"].to(device_str)
+            attention_mask = inputs.get("attention_mask", torch.ones_like(input_ids)).to(device_str)
 
             # 1. REAL MODEL A (RAW PYTORCH GENERATION)
             t0_raw = time.perf_counter()
@@ -72,7 +132,6 @@ class RealArenaHandler(SimpleHTTPRequestHandler):
             t1_raw = time.perf_counter()
 
             raw_full_text = tokenizer.decode(raw_outputs[0], skip_special_tokens=True)
-            # Extract newly generated text portion
             raw_gen_text = tokenizer.decode(raw_outputs[0][input_ids.shape[1]:], skip_special_tokens=True)
             raw_gen_tokens = raw_outputs.shape[1] - input_ids.shape[1]
             raw_time_s = t1_raw - t0_raw
@@ -82,15 +141,12 @@ class RealArenaHandler(SimpleHTTPRequestHandler):
             # 2. REAL MODEL B (ELASTIC-MTP SPECULATIVE GENERATION)
             t0_mtp = time.perf_counter()
             with torch.no_grad():
-                # Forward pass for hidden features
                 outputs = model(input_ids, attention_mask=attention_mask, output_hidden_states=True)
                 last_hidden = outputs.hidden_states[-1]
                 mid_hidden = outputs.hidden_states[len(outputs.hidden_states) // 2]
                 
-                # MTP Draft Head forward pass
                 draft_logits = mtp_head(last_hidden, mid_hidden)
                 
-                # Generate speculative verification outputs
                 mtp_outputs = model.generate(
                     input_ids,
                     attention_mask=attention_mask,
@@ -111,6 +167,8 @@ class RealArenaHandler(SimpleHTTPRequestHandler):
 
             response_data = {
                 "prompt": prompt,
+                "device_used": device_str.upper(),
+                "cuda_available": CUDA_AVAILABLE,
                 "model_a": {
                     "text": raw_gen_text,
                     "full_text": raw_full_text,
@@ -129,9 +187,6 @@ class RealArenaHandler(SimpleHTTPRequestHandler):
                     "speedup": round(speedup, 2)
                 }
             }
-
-            print(f"[API Response] Model A: '{raw_gen_text}' ({raw_tps:.1f} t/s)")
-            print(f"[API Response] Model B: '{mtp_gen_text}' ({mtp_tps:.1f} t/s)")
 
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')

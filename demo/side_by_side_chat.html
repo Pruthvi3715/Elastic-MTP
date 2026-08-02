@@ -59,6 +59,41 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .device-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #0f172a;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-btn {
+            background: #1e293b;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
         .prompt-box {
             display: flex;
             gap: 12px;
@@ -80,7 +115,7 @@
             border-color: var(--accent-blue);
         }
 
-        button {
+        button.gen-btn {
             background: linear-gradient(135deg, #0284c7, #16a34a);
             color: white;
             border: none;
@@ -92,7 +127,7 @@
             transition: transform 0.15s, opacity 0.2s;
         }
 
-        button:hover {
+        button.gen-btn:hover {
             opacity: 0.9;
             transform: translateY(-1px);
         }
@@ -244,9 +279,17 @@
     </header>
 
     <div class="prompt-container">
+        <div class="controls-header">
+            <span style="font-size:0.9rem; color:var(--text-muted);">Execution Settings</span>
+            <div class="device-toggle-container">
+                <span style="font-size:0.85rem; font-weight:600;">Execution Hardware:</span>
+                <button class="toggle-btn active" id="toggle-cpu" onclick="selectDevice('cpu')">CPU Mode</button>
+                <button class="toggle-btn" id="toggle-gpu" onclick="selectDevice('gpu')">GPU (CUDA) Mode</button>
+            </div>
+        </div>
         <div class="prompt-box">
             <input type="text" id="prompt-input" value="what is name of first president" placeholder="Type your prompt here...">
-            <button id="generate-btn" onclick="startRealGeneration()">Run PyTorch Generation</button>
+            <button class="gen-btn" id="generate-btn" onclick="startRealGeneration()">Run PyTorch Generation</button>
         </div>
         <div class="preset-prompts">
             <button class="preset-btn" onclick="setPrompt('what is name of first president')">First President</button>
@@ -326,8 +369,28 @@
     </div>
 
     <script>
+        let currentDevice = 'cpu';
+
         function setPrompt(txt) {
             document.getElementById('prompt-input').value = txt;
+        }
+
+        async function selectDevice(dev) {
+            currentDevice = dev;
+            document.getElementById('toggle-cpu').classList.toggle('active', dev === 'cpu');
+            document.getElementById('toggle-gpu').classList.toggle('active', dev === 'gpu');
+
+            try {
+                const res = await fetch('/api/set_device', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ device: dev })
+                });
+                const data = await res.json();
+                console.log("Device switch:", data);
+            } catch(e) {
+                console.log("Device toggle error:", e);
+            }
         }
 
         async function startRealGeneration() {
@@ -340,8 +403,8 @@
 
             const rawOut = document.getElementById('raw-output');
             const mtpOut = document.getElementById('mtp-output');
-            rawOut.innerText = "⏳ Running PyTorch forward pass for Model A...";
-            mtpOut.innerText = "⏳ Running PyTorch forward pass for Model B...";
+            rawOut.innerText = "⏳ Running PyTorch forward pass for Model A (" + currentDevice.toUpperCase() + ")...";
+            mtpOut.innerText = "⏳ Running PyTorch forward pass for Model B (" + currentDevice.toUpperCase() + ")...";
 
             document.getElementById('raw-status').innerText = 'Status: Computing...';
             document.getElementById('mtp-status').innerText = 'Status: Computing...';
@@ -350,7 +413,7 @@
                 const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: promptText, max_tokens: 35 })
+                    body: JSON.stringify({ prompt: promptText, max_tokens: 35, device: currentDevice })
                 });
 
                 const data = await response.json();
@@ -361,7 +424,7 @@
                 document.getElementById('raw-lat').innerText = data.model_a.latency_ms + ' ms';
                 document.getElementById('raw-tokens').innerText = data.model_a.tokens;
                 document.getElementById('raw-time').innerText = data.model_a.time_s + ' s';
-                document.getElementById('raw-status').innerText = 'Status: ✅ PyTorch Completed';
+                document.getElementById('raw-status').innerText = 'Status: ✅ PyTorch Completed (' + data.device_used + ')';
 
                 // Model B (Elastic-MTP) Data
                 mtpOut.innerText = data.model_b.text;
@@ -369,9 +432,9 @@
                 document.getElementById('mtp-lat').innerText = data.model_b.latency_ms + ' ms';
                 document.getElementById('mtp-tokens').innerText = data.model_b.tokens;
                 document.getElementById('mtp-time').innerText = data.model_b.time_s + ' s';
-                document.getElementById('mtp-status').innerText = 'Status: ✅ PyTorch Completed';
+                document.getElementById('mtp-status').innerText = 'Status: ✅ PyTorch Completed (' + data.device_used + ')';
 
-                document.getElementById('speedup-badge').innerText = 'REAL PYTORCH GENERATION';
+                document.getElementById('speedup-badge').innerText = data.device_used + ' RUNTIME';
 
             } catch (err) {
                 rawOut.innerText = 'Error executing PyTorch model: ' + err;

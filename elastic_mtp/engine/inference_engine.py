@@ -78,17 +78,8 @@ class ElasticMTPInferenceEngine:
                     self.tokenizer.pad_token = self.tokenizer.eos_token
                     
                 torch_dtype = torch.float16 if device == "cuda" else torch.float32
-                kwargs = {"trust_remote_code": True, "torch_dtype": torch_dtype}
-                if load_in_8bit:
-                    kwargs["load_in_8bit"] = True
-                elif load_in_4bit:
-                    kwargs["load_in_4bit"] = True
-                else:
-                    kwargs["device_map"] = "auto" if device == "cuda" else None
-                    
-                self.model = AutoModelForCausalLM.from_pretrained(model_name, **kwargs)
-                if device != "cuda" and not load_in_8bit and not load_in_4bit:
-                    self.model = self.model.to(device)
+                self.model = AutoModelForCausalLM.from_pretrained(model_name, dtype=torch_dtype, trust_remote_code=True)
+                self.model = self.model.to(device)
                 self.model.eval()
             except Exception as e:
                 print(f"[ElasticMTP Engine Warning] Real model load failed ({e}). Falling back to synthetic model.")
